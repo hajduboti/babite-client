@@ -10,7 +10,7 @@ export default function(state = initialState, action){
       case FETCH_CHANNELS:
         return {
           ...state,
-          items: action.payload
+          items: action.payload.Items
         };
       default:
         return state;

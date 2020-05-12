@@ -9,16 +9,22 @@ class Channels extends Component {
 
   render() {
     const channelItems = this.props.channels.map(channel => (
-      <div> {channel} </div>
+      <div key={channel.name}>
+        <h2> {channel.name} </h2>
+        <p> {channel.category} </p>
+      </div>
     ))
 
-    console.log(this.props.channels);
 
     return (
-      <div>Channels</div>
+      <div>
+      <h1>Channels</h1>
+      {channelItems}
+      </div>
     )
   }
 }
+
 
 const mapStateToProps = state => ({
   channels: state.channels.items

@@ -6,6 +6,6 @@ export const fetchChannels = () => dispatch => {
     .then(data =>
       dispatch({
         type: FETCH_CHANNELS,
-        payload: data.channels
+          payload: data.channels
     }))
 }
