@@ -9,10 +9,16 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "PT Serif", serif;
+  font-family: "Open Sans", sans-serif;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.card-img-top {
+    width: 100%;
+    height: 15vw;
+    object-fit: cover;
 }
