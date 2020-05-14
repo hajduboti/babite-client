@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { fetchChannels } from '../actions/channelActions';
-import Card from 'react-bootstrap/Card'
+import { Row, Card, Container } from 'react-bootstrap'
 class Channels extends Component {
   componentDidMount(){
     this.props.fetchChannels();
   }
 
   render() {
-    
     const channelItems = this.props.channels.map(channel => (
-      <Card key={channel.name} style={{ width: '18rem' }}>
+      <Card key={channel.name} className="mx-2 my-2" style={{ width: '18rem' }}>
+      <Card.Img variant="top" className="card-img-top" src={channel.thumbnail} />
         <Card.Body>
           <Card.Title>{channel.name}</Card.Title>
           <Card.Subtitle className="mb-2 text-muted">{channel.category}</Card.Subtitle>
@@ -26,10 +26,15 @@ class Channels extends Component {
 
     return (
       <div>
-      <h1>Channels</h1>
-      <div className="row">
-        {channelItems}
-      </div>
+      <Container fluid="md">
+        <Row >
+        <h1>Channels</h1>
+        <div className="row px-10 ">
+          {channelItems}
+        </div>
+        </Row>
+      </Container>
+
       </div>
     )
   }

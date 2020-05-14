@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import Channels from './components/Channels';
 import NavbarBabite from './components/Navbar';
 import './static/css/App.css';

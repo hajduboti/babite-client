@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { fetchChannels } from '../actions/channelActions';
-import { Navbar, Nav, NavDropdown, Form, FormControl, Button} from 'react-bootstrap'
+import { Navbar, Nav, Form} from 'react-bootstrap'
 import BabiteLogo from '../static/img/BabiteLogo.png'
 
 class NavbarBabite extends Component {
@@ -14,23 +14,42 @@ class NavbarBabite extends Component {
 
 
     return (
-        <Navbar className="background-color" >
-        <Navbar.Brand href="#home">
-            <img src={BabiteLogo}>
-            </img>
+      
+      <Nav className="navbar navbar-expand-md navbar-dark background-color">
+        <Navbar.Brand>
+          <img alt="babite-logo" src={BabiteLogo}></img>
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="mr-auto">
-            <Nav.Link className="navbar-text" href="#home">Home</Nav.Link>
-            <Nav.Link className="navbar-text" href="#link">Link</Nav.Link>
-            <Nav.Link className="navbar-text" href="#link">Poop</Nav.Link>
-        </Nav>
-        <Form inline>
-            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-        </Form>
-        </Navbar.Collapse>
-    </Navbar>
+          <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+
+              <ul className="navbar-nav mr-auto">
+              <Nav.Item className="nav-item">
+                      <Nav.Link className="nav-link">Following</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item className="nav-item">
+                      <Nav.Link className="nav-link" >Browse</Nav.Link>
+                  </Nav.Item>
+                   <Nav.Item className="nav-item">
+                      <Nav.Link className="nav-link">...</Nav.Link>
+                  </Nav.Item>
+              </ul>
+          </div>
+          <div className="mx-auto order-0">
+              <Form className="navbar-brand mx-auto">
+              {/* BootStrap is trash. Therefor rather than FormControl component, we make our own with an override css class. Bootstrap sucks */}
+                <input className="form-control-override mr-sm-2" type="text" placeholder="Search" />
+              </Form>
+              <button className="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
+                  <span className="navbar-toggler-icon"></span>
+              </button>
+          </div>
+          <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
+              <ul className="navbar-nav ml-auto">
+                  <Nav.Item className="nav-item">
+                      <Nav.Link className="nav-link" >Profile</Nav.Link>
+                  </Nav.Item>
+              </ul>
+          </div>
+      </Nav>
     )
   }
 }
