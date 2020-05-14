@@ -1,6 +1,7 @@
 import React from 'react';
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import Channels from './components/Channels';
+import NavbarBabite from './components/Navbar';
 import { Provider } from 'react-redux';
 import store from './store';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,6 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   return (
     <Provider store={store}>
+      <NavbarBabite />
       <Channels />
     </Provider>
   );
