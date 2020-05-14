@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { fetchChannels } from '../actions/channelActions';
-import { Row, Card, Container } from 'react-bootstrap'
+import { Row, Card, Container, Col } from 'react-bootstrap'
 class Channels extends Component {
   componentDidMount(){
     this.props.fetchChannels();
@@ -9,29 +9,29 @@ class Channels extends Component {
 
   render() {
     const channelItems = this.props.channels.map(channel => (
-      <Card key={channel.name} className="mx-2 my-2" style={{ width: '18rem' }}>
-      <Card.Img variant="top" className="card-img-top" src={channel.thumbnail} />
-        <Card.Body>
+      <Col xs={12} sm={6} md={3} large={4} >
+        <Card key={channel.name} className="my-2 channel-card" style={{ width: '100%' }}>
+        <Card.Img variant="top" className="card-img-top" src={channel.thumbnail} />
+        <Card.Body >
           <Card.Title>{channel.name}</Card.Title>
           <Card.Subtitle className="mb-2 text-muted">{channel.category}</Card.Subtitle>
           <Card.Text>
               {channel.description}
           </Card.Text>
-          {/* <Card.Link href="#">Card Link</Card.Link>
-          <Card.Link href="#">Another Link</Card.Link> */}
         </Card.Body>
-      </Card>
+        </Card>
+      </Col>
+
     ))
 
 
     return (
       <div>
-      <Container fluid="md">
-        <Row >
+      <Container fluid="py-4 channel-container px-4">
         <h1>Channels</h1>
-        <div className="row px-10 ">
+
+        <Row className="px-10 justify-content-center">
           {channelItems}
-        </div>
         </Row>
       </Container>
 

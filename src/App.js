@@ -1,7 +1,6 @@
 import React from 'react';
 import logo from './logo.svg';
 import Channels from './components/Channels';
-import './static/css/App.css';
 import { Provider } from 'react-redux';
 import store from './store';
 import 'bootstrap/dist/css/bootstrap.min.css';
