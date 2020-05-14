@@ -22,3 +22,28 @@ code {
     height: 15vw;
     object-fit: cover;
 }
+
+.nav-link{
+  color: white;
+  font-variant: small-caps;
+  font-size: 1.75vw;
+}
+.nav-link:hover{
+  color: #ed6363;
+}
+
+/* Override inherit form-control attributes, removed width attribute so search bar expands */
+.form-control-override {
+  display: block;
+  height: calc(1.5em + .75rem + 2px);
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
