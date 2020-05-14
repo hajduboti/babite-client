@@ -23,12 +23,13 @@ code {
     object-fit: cover;
 }
 
-.background-color{
-  background-color: #003545 !important;
+.nav-link{
+  color: white;
+  font-variant: small-caps;
+  font-size: 1.75vw;
 }
-
-.navbar-text{
-  color: white !important;
+.nav-link:hover{
+  color: #ed6363;
 }
 
 /* Override inherit form-control attributes, removed width attribute so search bar expands */

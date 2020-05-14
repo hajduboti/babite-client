@@ -15,7 +15,7 @@ class NavbarBabite extends Component {
 
     return (
       
-      <Nav className="navbar navbar-expand-md navbar-dark background-color">
+      <Nav style={{backgroundColor: "#003545"}} className="navbar navbar-expand-md background-color">
         <Navbar.Brand>
           <img alt="babite-logo" src={BabiteLogo}></img>
         </Navbar.Brand>
@@ -28,9 +28,9 @@ class NavbarBabite extends Component {
                   <Nav.Item className="nav-item">
                       <Nav.Link className="nav-link" >Browse</Nav.Link>
                   </Nav.Item>
-                   <Nav.Item className="nav-item">
+                   {/* <Nav.Item className="nav-item">
                       <Nav.Link className="nav-link">...</Nav.Link>
-                  </Nav.Item>
+                  </Nav.Item> */}
               </ul>
           </div>
           <div className="mx-auto order-0">
