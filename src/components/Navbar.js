@@ -35,7 +35,7 @@ class NavbarBabite extends Component {
           </div>
           <div className="mx-auto order-0">
               <Form className="navbar-brand mx-auto">
-              {/* BootStrap is trash. Therefor rather than FormControl component, we make our own with an override css class. Bootstrap sucks */}
+
                 <input className="form-control-override mr-sm-2" type="text" placeholder="Search" />
               </Form>
               <button className="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
