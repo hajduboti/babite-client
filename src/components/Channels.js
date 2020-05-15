@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { fetchChannels } from '../actions/channelActions';
 import { Row, Card, Container, Col } from 'react-bootstrap'
+import PropTypes from 'prop-types';
+
 class Channels extends Component {
   componentDidMount(){
     this.props.fetchChannels();
@@ -9,8 +11,8 @@ class Channels extends Component {
 
   render() {
     const channelItems = this.props.channels.map(channel => (
-      <Col xs={12} sm={6} md={3} large={4} >
-        <Card key={channel.name} className="my-2 channel-card" style={{ width: '100%' }}>
+      <Col key={channel.name} xs={12} sm={6} md={3} large={4} >
+        <Card  className="my-2 channel-card" style={{ width: '100%' }}>
         <Card.Img variant="top" className="card-img-top" src={channel.thumbnail} />
         <Card.Body >
           <Card.Title>{channel.name}</Card.Title>
@@ -23,7 +25,6 @@ class Channels extends Component {
       </Col>
 
     ))
-
 
     return (
       <div>
@@ -40,6 +41,10 @@ class Channels extends Component {
   }
 }
 
+Channels.propTypes = {
+  fetchChannels: PropTypes.func.isRequired,
+  channels: PropTypes.array.isRequired
+};
 
 const mapStateToProps = state => ({
   channels: state.channels.items
