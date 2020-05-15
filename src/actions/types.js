@@ -1,2 +1,6 @@
 export const FETCH_CHANNELS = 'FETCH_CHANNELS';
 export const CREATE_CHANNEL = 'CREATE_CHANNEL';
+export const SET_SESSION = 'SET_SESSION';
+export const CLEAR_SESSION = 'CLEAR_SESSION';
+
+
