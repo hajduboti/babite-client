@@ -12,6 +12,11 @@ export default function(state = initialState, action){
           ...state,
           items: action.payload.Items
         };
+      case CREATE_CHANNEL:
+        return {
+          ...state,
+          item: action.payload
+        }
       default:
         return state;
 
