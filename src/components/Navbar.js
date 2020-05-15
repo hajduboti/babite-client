@@ -3,14 +3,29 @@ import { connect } from 'react-redux';
 import { fetchChannels } from '../actions/channelActions';
 import { Navbar, Nav, Form} from 'react-bootstrap'
 import BabiteLogo from '../static/img/BabiteLogo.png'
+import { Link } from "react-router-dom";
+import Popup from "./Popup"
+import Login from './auth/Login';
 
+//TODO: Profile/Sign In Toggle.
 class NavbarBabite extends Component {
+  constructor(props){  
+    super(props);  
+    this.state = { showPopup: false };  
+    }  
+
   componentDidMount(){
     this.props.fetchChannels();
   }
 
+  togglePopup() {  
+    this.setState({  
+         showPopup: !this.state.showPopup  
+    });  
+     }  
+
   render() {
-  
+  let {isAuthenticated} = this.props
 
 
     return (
@@ -28,9 +43,6 @@ class NavbarBabite extends Component {
                   <Nav.Item className="nav-item">
                       <Nav.Link className="nav-link" >Browse</Nav.Link>
                   </Nav.Item>
-                   {/* <Nav.Item className="nav-item">
-                      <Nav.Link className="nav-link">...</Nav.Link>
-                  </Nav.Item> */}
               </ul>
           </div>
           <div className="mx-auto order-0">
@@ -45,9 +57,18 @@ class NavbarBabite extends Component {
           <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
               <ul className="navbar-nav ml-auto">
                   <Nav.Item className="nav-item">
-                      <Nav.Link className="nav-link" >Profile</Nav.Link>
+                      {isAuthenticated ? <Nav.Link className="nav-link">Profile</Nav.Link> : <Nav.Link  className="nav-link" onClick={this.togglePopup.bind(this)}> Log In </Nav.Link>}
                   </Nav.Item>
               </ul>
+              {this.state.showPopup ?  
+                <Popup  
+                          isOpen={true}
+                          text='Enter credentials'  
+                          closePopup={this.togglePopup.bind(this)}
+                          html={<Login/>}  
+                />  
+                : null  
+                }  
           </div>
       </Nav>
     )
