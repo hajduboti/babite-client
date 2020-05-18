@@ -18,22 +18,21 @@ code {
 }
 
 .card-img-top {
-    width: 100%;
-    height: 14vw;
+    height: 12vw;
     object-fit: cover;
-}
-.channel-container h1 {
-  color: white;
-  width: 100%;
 }
 
 .card-body {
   background-color: #003545;
-  color: white;
+  color: #e6d8e1;
   border-bottom: 1px red !important;
-
+  opacity: .93;
 }
 
+.card {
+  border: none !important;
+  height: 30 vw !important;
+}
 
 .nav-link{
   color: white;
