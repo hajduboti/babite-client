@@ -17,14 +17,18 @@ code {
     monospace;
 }
 
+body::-webkit-scrollbar {
+  display: none;
+}
+
 .card-img-top {
-    height: 12vw;
+    height: 60vw;
     object-fit: cover;
 }
 
 .card-body {
   background-color: #003545;
-  color: #e6d8e1;
+  color: #dedede;
   border-bottom: 1px red !important;
   opacity: .93;
 }
@@ -33,6 +37,30 @@ code {
   border: none !important;
   height: 30 vw !important;
 }
+
+.card-title {
+  color: #dedede;
+}
+.card-title:hover {
+  color: #ed6363;
+  text-decoration: none;
+}
+
+.card-subtitle {
+  color: #6c757d;
+}
+.card-subtitle:hover {
+  color: #ed6363;
+  text-decoration: none;
+}
+
+@media all and (min-width: 480px) {
+  .card-img-top {
+      height: 12vw;
+      object-fit: cover;
+  }
+}
+
 
 .nav-link{
   color: white;
