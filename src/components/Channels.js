@@ -11,12 +11,12 @@ class Channels extends Component {
 
   render() {
     const channelItems = this.props.channels.map(channel => (
-      <Col key={channel.name} xs={12} sm={6} md={3} large={4} >
-        <Card  className="my-2 channel-card" style={{ width: '100%' }}>
+      <Col key={channel.name} xs={12} sm={6} md={3} large={2} >
+        <Card  className="my-2 channel-card">
         <Card.Img variant="top" className="card-img-top" src={channel.thumbnail} />
         <Card.Body >
-          <Card.Title>{channel.name}</Card.Title>
-          <Card.Subtitle className="mb-2 text-muted">{channel.category}</Card.Subtitle>
+          <Card.Title><a className="card-title" href="#">{channel.name}</a></Card.Title>
+          <Card.Subtitle className="mb-2 text-muted"> <a className="card-subtitle" href="#">{channel.category}</a></Card.Subtitle>
           <Card.Text>
               {channel.description}
           </Card.Text>
@@ -27,16 +27,11 @@ class Channels extends Component {
     ))
 
     return (
-      <div>
-      <Container fluid="py-4 channel-container px-4">
-        <h1>Channels</h1>
-
-        <Row className="px-10 justify-content-center">
+      <Container className="py-4 px-3" fluid="channel-container ">
+        <Row className="px-10 justify-content-center align-items-stretch">
           {channelItems}
         </Row>
       </Container>
-
-      </div>
     )
   }
 }
