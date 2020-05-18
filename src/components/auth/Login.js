@@ -26,13 +26,11 @@ class Login extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         try {
-            console.log(this.state.username)
-            console.log(this.state.password)
+            // console.log(this.state.username)
+            // console.log(this.state.password)
             await Auth.signIn(this.state.username, this.state.password);
             alert("Logged in");
-            //TODO: Save user session somehow. Token, Cookies, etc.
-            // this.props.isAuthenticated = true;
-
+            window.location = ""
           } catch (e) {
             alert(e.message);
           }

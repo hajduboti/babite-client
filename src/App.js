@@ -12,15 +12,31 @@ import awsmobile from './aws-exports';
 
 Amplify.configure(awsmobile);
 
-function App() {
+
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+        isAuthenticated: null
+    }
+  }
+  // This is quite horrendous. But I can see no other way.
+  componentDidMount () {
+    let lastLoggedUser = localStorage.getItem("CognitoIdentityServiceProvider.2un1dsdo335a6ja7l0pm0ener0.LastAuthUser")
+    this.setState({ isAuthenticated: localStorage.getItem("CognitoIdentityServiceProvider.2un1dsdo335a6ja7l0pm0ener0." + lastLoggedUser + ".accessToken") });
+  }
+  render(){
+
   return (
     <Provider store={store}>
       {/* An example of routing/paths that works. Commented for future use. */}
       {/* <Route path="/login" component={Login} /> */}
-      <NavbarBabite />
+      <NavbarBabite isAuthenticated={this.state.isAuthenticated} />
       <Channels/>
     </Provider>
   );
+}
 }
 
 export default App;
