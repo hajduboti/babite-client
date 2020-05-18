@@ -10,7 +10,6 @@ import Amplify from 'aws-amplify';
 import awsmobile from './aws-exports';
 
 
-
 Amplify.configure(awsmobile);
 
 function App() {
@@ -19,7 +18,7 @@ function App() {
       {/* An example of routing/paths that works. Commented for future use. */}
       {/* <Route path="/login" component={Login} /> */}
       <NavbarBabite />
-      <Channels />
+      <Channels/>
     </Provider>
   );
 }
