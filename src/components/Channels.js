@@ -15,8 +15,8 @@ class Channels extends Component {
         <Card  className="my-2 channel-card">
         <Card.Img variant="top" className="card-img-top" src={channel.thumbnail} />
         <Card.Body >
-          <Card.Title><a class="card-title" href="#">{channel.name}</a></Card.Title>
-          <Card.Subtitle className="mb-2 text-muted"> <a class="card-subtitle" href="#">{channel.category}</a></Card.Subtitle>
+          <Card.Title><a className="card-title" href="#">{channel.name}</a></Card.Title>
+          <Card.Subtitle className="mb-2 text-muted"> <a className="card-subtitle" href="#">{channel.category}</a></Card.Subtitle>
           <Card.Text>
               {channel.description}
           </Card.Text>

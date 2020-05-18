@@ -54,7 +54,7 @@ body::-webkit-scrollbar {
   text-decoration: none;
 }
 
-@media all and (min-width: 480px) {
+@media all and (min-width: 576px) {
   .card-img-top {
       height: 12vw;
       object-fit: cover;
