@@ -3,7 +3,6 @@ import {Component } from "react";
 import { Button, FormGroup, FormControl } from "react-bootstrap";
 import "../../static/css/login.css";
 import { Auth } from "aws-amplify";
-import Cookies from "js-cookie"
 class Login extends Component {
 
     constructor(props){  
@@ -26,8 +25,6 @@ class Login extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         try {
-            // console.log(this.state.username)
-            // console.log(this.state.password)
             await Auth.signIn(this.state.username, this.state.password);
             alert("Logged in");
             window.location = ""
