@@ -1,9 +1,8 @@
 import React from 'react'
-import {Component, useState } from "react";
+import {Component } from "react";
 import { Button, FormGroup, FormControl } from "react-bootstrap";
 import "../../static/css/login.css";
 import { Auth } from "aws-amplify";
-
 class Login extends Component {
 
     constructor(props){  
@@ -26,12 +25,9 @@ class Login extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         try {
-            console.log(this.state.username)
-            console.log(this.state.password)
             await Auth.signIn(this.state.username, this.state.password);
             alert("Logged in");
-            //TODO: Save user session somehow. Token, Cookies, etc.
-            // this.props.isAuthenticated = true;
+            window.location = ""
           } catch (e) {
             alert(e.message);
           }
@@ -41,11 +37,11 @@ class Login extends Component {
     handleChange(event, field) {
       
         let value = event.target.value;
-        if(field == "username"){
+        if(field === "username"){
             this.setState({
                 username: value
             });
-        }else if(field =="password"){
+        }else if(field ==="password"){
             this.setState({
                 password: value
             });

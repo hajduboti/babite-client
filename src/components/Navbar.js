@@ -6,13 +6,14 @@ import BabiteLogo from '../static/img/BabiteLogo.png'
 import { Link } from "react-router-dom";
 import Popup from "./Popup"
 import Login from './auth/Login';
+import {handleLogout} from "./auth/Logout";
+import { Auth } from "aws-amplify";
 
-//TODO: Profile/Sign In Toggle.
 class NavbarBabite extends Component {
   constructor(props){  
     super(props);  
     this.state = { showPopup: false };  
-    }  
+  }  
 
   componentDidMount(){
     this.props.fetchChannels();
@@ -57,7 +58,9 @@ class NavbarBabite extends Component {
           <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
               <ul className="navbar-nav ml-auto">
                   <Nav.Item className="nav-item">
-                      {isAuthenticated ? <Nav.Link className="nav-link">Profile</Nav.Link> : <Nav.Link  className="nav-link" onClick={this.togglePopup.bind(this)}> Log In </Nav.Link>}
+                      {/* {isAuthenticated ? <Nav.Link className="nav-link" onClick={this.handleLogout.bind(this)}>LogOut</Nav.Link> : <Nav.Link  className="nav-link" onClick={this.togglePopup.bind(this)}> Log In </Nav.Link>} */}
+                      {isAuthenticated ? <Nav.Link className="nav-link" onClick={handleLogout}>LogOut</Nav.Link> : <Nav.Link  className="nav-link" onClick={this.togglePopup.bind(this)}> Log In </Nav.Link>}
+
                   </Nav.Item>
               </ul>
               {this.state.showPopup ?  

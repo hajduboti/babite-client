@@ -1,7 +1,6 @@
 import React from 'react';  
 import '../static/css/popup.css';  
-import Login from "./auth/Login"
-import { render } from '@testing-library/react';
+
 class Popup extends React.Component {  
     constructor(props) {
         super(props);
