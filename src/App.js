@@ -1,11 +1,13 @@
 import React from "react";
 // import logo from './logo.svg';
 import Channels from './components/Channels';
+import PageNotFound from './components/PageNotFound';
+import Channel from './components/Channel';
 import NavbarBabite from './components/Navbar';
 import { Provider } from 'react-redux';
 import store from './store';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Route} from "react-router-dom";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import Amplify from 'aws-amplify';
 import awsmobile from './aws-exports';
 
@@ -30,10 +32,15 @@ class App extends React.Component {
 
   return (
     <Provider store={store}>
+      <NavbarBabite isAuthenticated={this.state.isAuthenticated} />
+      <Router>
+        <Switch>
+          <Route exact path="/" component={Channels}/>
+          <Route component={Channel}/>
+        </Switch>
+      </Router>
       {/* An example of routing/paths that works. Commented for future use. */}
       {/* <Route path="/login" component={Login} /> */}
-      <NavbarBabite isAuthenticated={this.state.isAuthenticated} />
-      <Channels/>
     </Provider>
   );
 }
