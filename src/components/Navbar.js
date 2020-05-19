@@ -1,18 +1,19 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { fetchChannels } from '../actions/channelActions';
-import { Navbar, Nav, Form} from 'react-bootstrap'
+import { Navbar, Nav, Form,Row} from 'react-bootstrap'
 import BabiteLogo from '../static/img/BabiteLogo.png'
 import { Link } from "react-router-dom";
 import Popup from "./Popup"
 import Login from './auth/Login';
+import Signup from './auth/Signup';
 import {handleLogout} from "./auth/Logout";
 import { Auth } from "aws-amplify";
 
 class NavbarBabite extends Component {
   constructor(props){  
     super(props);  
-    this.state = { showPopup: false };  
+    this.state = { showSignUp: false, showLogIn:false };  
     this.togglePopup = this.togglePopup.bind(this)
   }  
 
@@ -20,11 +21,19 @@ class NavbarBabite extends Component {
     this.props.fetchChannels();
   }
 
-  togglePopup() {
-    this.setState({
-         showPopup: !this.state.showPopup
-    });
+  togglePopup(popUpType) {
+    // event.preventDefault()
+    switch(popUpType){
+    case "login":
+      this.setState({
+        showLogIn: !this.state.showLogIn
+      });
+      case "signup":
+      this.setState({
+          showSignUp: !this.state.showSignUp
+      });
      }
+    }
 
   render() {
   let {isAuthenticated} = this.props
@@ -66,11 +75,21 @@ class NavbarBabite extends Component {
                   <Nav.Item className="nav-item">
                       {isAuthenticated ? 
                         <Nav.Link className="nav-link" onClick={handleLogout}>LogOut</Nav.Link> : 
-                        <Nav.Link className="nav-link" onClick={this.togglePopup}> Log In </Nav.Link>}
+
+                        <Row>
+                        <Nav.Item>
+                          <Nav.Link className="nav-link" onClick={() => this.togglePopup('login')}> Log In </Nav.Link>
+                        </Nav.Item>
+
+                        <Nav.Item>
+                          <Nav.Link className="nav-link" onClick={() => this.togglePopup('signup')}> Sign Up </Nav.Link>
+                        </Nav.Item>
+                        </Row>
+                      } 
 
                   </Nav.Item>
               </ul>
-              {this.state.showPopup ?  
+              {this.state.showLogIn ?  
               // Popup takes these prop parameters. Can customize more if desired.
                 <Popup  
                           isOpen={true}
@@ -78,6 +97,17 @@ class NavbarBabite extends Component {
                           subheading='Please enter credentials' 
                           closePopup={this.togglePopup}
                           html={<Login/>}  
+                />  
+                : null  
+                }  
+                {this.state.showSignUp ?  
+              // Popup takes these prop parameters. Can customize more if desired.
+                <Popup  
+                          isOpen={true}
+                          heading='Sign Up' 
+                          subheading='Please enter credentials' 
+                          closePopup={this.togglePopup}
+                          html={<Signup/>}  
                 />  
                 : null  
                 }  
