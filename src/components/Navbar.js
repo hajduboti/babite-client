@@ -10,10 +10,11 @@ import {handleLogout} from "./auth/Logout";
 import { Auth } from "aws-amplify";
 
 class NavbarBabite extends Component {
-  constructor(props){
-    super(props);
-    this.state = { showPopup: false };
-  }
+  constructor(props){  
+    super(props);  
+    this.state = { showPopup: false };  
+    this.togglePopup = this.togglePopup.bind(this)
+  }  
 
   componentDidMount(){
     this.props.fetchChannels();
@@ -38,12 +39,17 @@ class NavbarBabite extends Component {
           <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
 
               <ul className="navbar-nav mr-auto">
-              <Nav.Item className="nav-item">
-                      <Nav.Link className="nav-link">Following</Nav.Link>
-                  </Nav.Item>
+
+              {/* If user is authenticated, display following button, else, nothing */}
+              {isAuthenticated ? 
+                <Nav.Item className="nav-item">
+                  <Nav.Link className="nav-link">Following</Nav.Link>
+                </Nav.Item> :  null }   
+
                   <Nav.Item className="nav-item">
                       <Nav.Link className="nav-link" href="/">Browse</Nav.Link>
                   </Nav.Item>
+                  
               </ul>
           </div>
           <div className="mx-auto order-0">
@@ -58,20 +64,23 @@ class NavbarBabite extends Component {
           <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
               <ul className="navbar-nav ml-auto">
                   <Nav.Item className="nav-item">
-                      {/* {isAuthenticated ? <Nav.Link className="nav-link" onClick={this.handleLogout.bind(this)}>LogOut</Nav.Link> : <Nav.Link  className="nav-link" onClick={this.togglePopup.bind(this)}> Log In </Nav.Link>} */}
-                      {isAuthenticated ? <Nav.Link className="nav-link" onClick={handleLogout}>LogOut</Nav.Link> : <Nav.Link  className="nav-link" onClick={this.togglePopup.bind(this)}> Log In </Nav.Link>}
+                      {isAuthenticated ? 
+                        <Nav.Link className="nav-link" onClick={handleLogout}>LogOut</Nav.Link> : 
+                        <Nav.Link className="nav-link" onClick={this.togglePopup}> Log In </Nav.Link>}
 
                   </Nav.Item>
               </ul>
-              {this.state.showPopup ?
-                <Popup
+              {this.state.showPopup ?  
+              // Popup takes these prop parameters. Can customize more if desired.
+                <Popup  
                           isOpen={true}
-                          text='Enter credentials'
-                          closePopup={this.togglePopup.bind(this)}
-                          html={<Login/>}
-                />
-                : null
-                }
+                          heading='Log In' 
+                          subheading='Please enter credentials' 
+                          closePopup={this.togglePopup}
+                          html={<Login/>}  
+                />  
+                : null  
+                }  
           </div>
       </Nav>
     )

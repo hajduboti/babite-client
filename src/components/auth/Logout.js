@@ -7,7 +7,6 @@ export function handleLogout() {
             localStorage.removeItem(key);
           }
         }
-        alert("Logged out");
         window.location =""
         //TODO: Save user session somehow. Token, Cookies, etc.
         // this.props.isAuthenticated = true;
