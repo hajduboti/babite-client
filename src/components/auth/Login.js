@@ -26,7 +26,6 @@ class Login extends Component {
         event.preventDefault();
         try {
             await Auth.signIn(this.state.username, this.state.password);
-            alert("Logged in");
             window.location = ""
           } catch (e) {
             alert(e.message);

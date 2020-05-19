@@ -32,7 +32,8 @@ class Popup extends React.Component {
             {this.state.isOpen ? 
                 <div className='popup'>  
                 <div className='popup_inner'>  
-                <h1>{this.props.text}</h1>
+                <h2>{this.props.heading}</h2>
+                <h5>{this.props.subheading}</h5>
                     {this.props.html}
                 <button onClick={this.props.closePopup}>Exit</button>  
                 </div>  
