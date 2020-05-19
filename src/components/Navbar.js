@@ -10,27 +10,27 @@ import {handleLogout} from "./auth/Logout";
 import { Auth } from "aws-amplify";
 
 class NavbarBabite extends Component {
-  constructor(props){  
-    super(props);  
-    this.state = { showPopup: false };  
-  }  
+  constructor(props){
+    super(props);
+    this.state = { showPopup: false };
+  }
 
   componentDidMount(){
     this.props.fetchChannels();
   }
 
-  togglePopup() {  
-    this.setState({  
-         showPopup: !this.state.showPopup  
-    });  
-     }  
+  togglePopup() {
+    this.setState({
+         showPopup: !this.state.showPopup
+    });
+     }
 
   render() {
   let {isAuthenticated} = this.props
 
 
     return (
-      
+
       <Nav style={{backgroundColor: "#003545"}} className="navbar navbar-expand-md background-color">
         <Navbar.Brand>
           <img alt="babite-logo" src={BabiteLogo}></img>
@@ -42,7 +42,7 @@ class NavbarBabite extends Component {
                       <Nav.Link className="nav-link">Following</Nav.Link>
                   </Nav.Item>
                   <Nav.Item className="nav-item">
-                      <Nav.Link className="nav-link" >Browse</Nav.Link>
+                      <Nav.Link className="nav-link" href="/">Browse</Nav.Link>
                   </Nav.Item>
               </ul>
           </div>
@@ -63,15 +63,15 @@ class NavbarBabite extends Component {
 
                   </Nav.Item>
               </ul>
-              {this.state.showPopup ?  
-                <Popup  
+              {this.state.showPopup ?
+                <Popup
                           isOpen={true}
-                          text='Enter credentials'  
+                          text='Enter credentials'
                           closePopup={this.togglePopup.bind(this)}
-                          html={<Login/>}  
-                />  
-                : null  
-                }  
+                          html={<Login/>}
+                />
+                : null
+                }
           </div>
       </Nav>
     )
