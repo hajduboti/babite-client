@@ -20,18 +20,18 @@ class NavbarBabite extends Component {
     this.props.fetchChannels();
   }
 
-  togglePopup() {  
-    this.setState({  
-         showPopup: !this.state.showPopup  
-    });  
-     }  
+  togglePopup() {
+    this.setState({
+         showPopup: !this.state.showPopup
+    });
+     }
 
   render() {
   let {isAuthenticated} = this.props
 
 
     return (
-      
+
       <Nav style={{backgroundColor: "#003545"}} className="navbar navbar-expand-md background-color">
         <Navbar.Brand>
           <img alt="babite-logo" src={BabiteLogo}></img>
@@ -47,7 +47,7 @@ class NavbarBabite extends Component {
                 </Nav.Item> :  null }   
 
                   <Nav.Item className="nav-item">
-                      <Nav.Link className="nav-link"> Browse </Nav.Link>
+                      <Nav.Link className="nav-link" href="/">Browse</Nav.Link>
                   </Nav.Item>
                   
               </ul>
