@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { fetchChannels } from '../actions/channelActions';
 import { Row, Card, Container, Col } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types';
 
 class Channels extends Component {
@@ -15,7 +16,7 @@ class Channels extends Component {
         <Card  className="my-2 channel-card">
         <Card.Img variant="top" className="card-img-top" src={channel.thumbnail} />
         <Card.Body >
-          <Card.Title><a className="card-title" href="#">{channel.name}</a></Card.Title>
+          <Card.Title><Link to={channel.name} className="card-title">{channel.name}</Link></Card.Title>
           <Card.Subtitle className="mb-2 text-muted"> <a className="card-subtitle" href="#">{channel.category}</a></Card.Subtitle>
           <Card.Text>
               {channel.description}
