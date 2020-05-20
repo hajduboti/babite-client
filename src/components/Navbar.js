@@ -15,24 +15,34 @@ class NavbarBabite extends Component {
     super(props);  
     this.state = { showSignUp: false, showLogIn:false };  
     this.togglePopup = this.togglePopup.bind(this)
+    this.neutralizePopupState = this.neutralizePopupState.bind(this)
   }  
 
   componentDidMount(){
     this.props.fetchChannels();
   }
 
+  // Displays certain popup type depending on which button is clicked
   togglePopup(popUpType) {
-    // event.preventDefault()
     switch(popUpType){
     case "login":
       this.setState({
-        showLogIn: !this.state.showLogIn
+        showLogIn: !this.state.showLogIn,
+        showSignUp: false
       });
-      case "signup":
+      break;
+
+    case "signup":
       this.setState({
-          showSignUp: !this.state.showSignUp
+          showSignUp: !this.state.showSignUp,
+          showLogIn: false
       });
+      break;
      }
+    }
+    // When the form is closed via esc. or exit, we set states to false so that the toggle is not broken, which requires double clicking the button to open the form (state of showLogin/Signup is still true and is set to false on click again)
+    neutralizePopupState() {
+      this.setState({showLogIn: false, showSignUp: false})
     }
 
   render() {
@@ -91,23 +101,26 @@ class NavbarBabite extends Component {
               </ul>
               {this.state.showLogIn ?  
               // Popup takes these prop parameters. Can customize more if desired.
+              // isOpen is a toggle pop to toggle the form
+              // html is the html/component to be displayed within the popup
+              // onclose takes the neutralizePopupState function
                 <Popup  
                           isOpen={true}
                           heading='Log In' 
                           subheading='Please enter credentials' 
-                          closePopup={this.togglePopup}
                           html={<Login/>}  
+                          onclose={this.neutralizePopupState}
                 />  
                 : null  
                 }  
                 {this.state.showSignUp ?  
-              // Popup takes these prop parameters. Can customize more if desired.
+
                 <Popup  
                           isOpen={true}
                           heading='Sign Up' 
                           subheading='Please enter credentials' 
-                          closePopup={this.togglePopup}
-                          html={<Signup/>}  
+                          html={<Signup/>} 
+                          onclose={this.neutralizePopupState} 
                 />  
                 : null  
                 }  
