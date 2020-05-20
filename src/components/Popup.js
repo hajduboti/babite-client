@@ -8,18 +8,25 @@ class Popup extends React.Component {
             isOpen: this.props.isOpen
         }
         this.escFunction = this.escFunction.bind(this);
-
+        this.exitPopup = this.exitPopup.bind(this);
     }
 
     escFunction(event){
         // If escape key pressed
         if(event.keyCode === 27) {
             this.setState({ isOpen: false })
+            this.props.onclose(this.state.isOpen)
         }
+    }
+
+    exitPopup(event){
+        this.setState({ isOpen: false })
+        this.props.onclose(this.state.isOpen)
     }
 
     componentDidMount(){
         document.addEventListener("keydown", this.escFunction, false);
+        
 
     }
     componentWillUnmount(){
@@ -35,7 +42,7 @@ class Popup extends React.Component {
                 <h2>{this.props.heading}</h2>
                 <h5>{this.props.subheading}</h5>
                     {this.props.html}
-                <button onClick={this.props.closePopup}>Exit</button>  
+                <button onClick={this.exitPopup}>Exit</button>  
                 </div>  
                 </div>
                 : null }

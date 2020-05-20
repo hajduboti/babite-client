@@ -1,30 +1,49 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { fetchChannels } from '../actions/channelActions';
-import { Navbar, Nav, Form} from 'react-bootstrap'
+import { Navbar, Nav, Form,Row} from 'react-bootstrap'
 import BabiteLogo from '../static/img/BabiteLogo.png'
 import { Link } from "react-router-dom";
 import Popup from "./Popup"
 import Login from './auth/Login';
+import Signup from './auth/Signup';
 import {handleLogout} from "./auth/Logout";
 import { Auth } from "aws-amplify";
 
 class NavbarBabite extends Component {
   constructor(props){  
     super(props);  
-    this.state = { showPopup: false };  
+    this.state = { showSignUp: false, showLogIn:false };  
     this.togglePopup = this.togglePopup.bind(this)
+    this.neutralizePopupState = this.neutralizePopupState.bind(this)
   }  
 
   componentDidMount(){
     this.props.fetchChannels();
   }
 
-  togglePopup() {
-    this.setState({
-         showPopup: !this.state.showPopup
-    });
+  // Displays certain popup type depending on which button is clicked
+  togglePopup(popUpType) {
+    switch(popUpType){
+    case "login":
+      this.setState({
+        showLogIn: !this.state.showLogIn,
+        showSignUp: false
+      });
+      break;
+
+    case "signup":
+      this.setState({
+          showSignUp: !this.state.showSignUp,
+          showLogIn: false
+      });
+      break;
      }
+    }
+    // When the form is closed via esc. or exit, we set states to false so that the toggle is not broken, which requires double clicking the button to open the form (state of showLogin/Signup is still true and is set to false on click again)
+    neutralizePopupState() {
+      this.setState({showLogIn: false, showSignUp: false})
+    }
 
   render() {
   let {isAuthenticated} = this.props
@@ -66,18 +85,42 @@ class NavbarBabite extends Component {
                   <Nav.Item className="nav-item">
                       {isAuthenticated ? 
                         <Nav.Link className="nav-link" onClick={handleLogout}>LogOut</Nav.Link> : 
-                        <Nav.Link className="nav-link" onClick={this.togglePopup}> Log In </Nav.Link>}
+
+                        <Row>
+                        <Nav.Item>
+                          <Nav.Link className="nav-link" onClick={() => this.togglePopup('login')}> Log In </Nav.Link>
+                        </Nav.Item>
+
+                        <Nav.Item>
+                          <Nav.Link className="nav-link" onClick={() => this.togglePopup('signup')}> Sign Up </Nav.Link>
+                        </Nav.Item>
+                        </Row>
+                      } 
 
                   </Nav.Item>
               </ul>
-              {this.state.showPopup ?  
+              {this.state.showLogIn ?  
               // Popup takes these prop parameters. Can customize more if desired.
+              // isOpen is a toggle pop to toggle the form
+              // html is the html/component to be displayed within the popup
+              // onclose takes the neutralizePopupState function
                 <Popup  
                           isOpen={true}
                           heading='Log In' 
                           subheading='Please enter credentials' 
-                          closePopup={this.togglePopup}
                           html={<Login/>}  
+                          onclose={this.neutralizePopupState}
+                />  
+                : null  
+                }  
+                {this.state.showSignUp ?  
+
+                <Popup  
+                          isOpen={true}
+                          heading='Sign Up' 
+                          subheading='Please enter credentials' 
+                          html={<Signup/>} 
+                          onclose={this.neutralizePopupState} 
                 />  
                 : null  
                 }  
