@@ -1,10 +1,16 @@
 .profile-button{
-    max-width: 1.2em;
-    max-height: 1.2em;
+    max-width: 2em;
+    max-height: 2em;
 }
-
-#dropdown-toggle::after {
-    display:none;
+.profile-toggle{
     background-color: rgba(255, 255, 255, 0) !important;
+    display:none;
     border: none !important;
+
+}
+.profile-toggle::after{
+    background-color: rgba(255, 255, 255, 0) !important;
+    display:none;
+    border: none !important;
+
 }
