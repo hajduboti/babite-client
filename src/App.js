@@ -20,19 +20,20 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        isAuthenticated: null
+        isAuthenticated: null,
+        username: null
     }
   }
   // This is quite horrendous. But I can see no other way.
   componentDidMount () {
     let lastLoggedUser = localStorage.getItem("CognitoIdentityServiceProvider.2un1dsdo335a6ja7l0pm0ener0.LastAuthUser")
-    this.setState({ isAuthenticated: localStorage.getItem("CognitoIdentityServiceProvider.2un1dsdo335a6ja7l0pm0ener0." + lastLoggedUser + ".accessToken") });
+    this.setState({ isAuthenticated: localStorage.getItem("CognitoIdentityServiceProvider.2un1dsdo335a6ja7l0pm0ener0." + lastLoggedUser + ".accessToken"), username: lastLoggedUser });
   }
   render(){
 
   return (
     <Provider store={store}>
-      <NavbarBabite isAuthenticated={this.state.isAuthenticated} />
+      <NavbarBabite isAuthenticated={this.state.isAuthenticated} username={this.state.username} />
       <Router>
         <Switch>
           <Route exact path="/" component={Channels}/>
