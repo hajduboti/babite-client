@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { fetchChannels } from '../actions/channelActions';
-import { Navbar, Nav, Form,Row} from 'react-bootstrap'
+import { Navbar, Nav, Form, Row, Dropdown, DropdownButton} from 'react-bootstrap'
 import BabiteLogo from '../static/img/BabiteLogo.png'
+import Profile from '../static/img/Profile.png'
 import { Link } from "react-router-dom";
 import Popup from "./Popup"
 import Login from './auth/Login';
 import Signup from './auth/Signup';
 import {handleLogout} from "./auth/Logout";
-import { Auth } from "aws-amplify";
+import "../static/css/navbar.css";
 
 class NavbarBabite extends Component {
   constructor(props){  
@@ -50,10 +51,10 @@ class NavbarBabite extends Component {
 
 
     return (
-
-      <Nav style={{backgroundColor: "#003545"}} className="navbar navbar-expand-md background-color">
+      // style={{backgroundColor: "#003545"}}
+      <Nav className="navbar navbar-expand-md background-color">
         <Navbar.Brand>
-          <img alt="babite-logo" src={BabiteLogo}></img>
+          <img alt='babite-logo' src={BabiteLogo}></img>
         </Navbar.Brand>
           <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
 
@@ -84,8 +85,22 @@ class NavbarBabite extends Component {
               <ul className="navbar-nav ml-auto">
                   <Nav.Item className="nav-item">
                       {isAuthenticated ? 
-                        <Nav.Link className="nav-link" onClick={handleLogout}>LogOut</Nav.Link> : 
+                      <Row>
+                        <Nav.Link className="nav-link" onClick={handleLogout}>LogOut</Nav.Link>  
 
+                        <Dropdown>
+                          <Dropdown.Toggle id="dropdown-toggle">
+                            <img class="profile-button" alt="profile-dropdown" src={Profile}></img>
+                          </Dropdown.Toggle>
+
+                          <Dropdown.Menu >
+                            <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                            <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+                            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </Row>
+                      :
                         <Row>
                         <Nav.Item>
                           <Nav.Link className="nav-link" onClick={() => this.togglePopup('login')}> Log In </Nav.Link>

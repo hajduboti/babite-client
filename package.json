@@ -15,7 +15,8 @@
     "react-scripts": "3.4.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "aws-amplify": "3.0.11"
+    "aws-amplify": "3.0.11",
+    "react-big-calendar": "0.24.6"
   },
   "scripts": {
     "start": "react-scripts start",
