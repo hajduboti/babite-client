@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { fetchChannels } from '../actions/channelActions';
-import { Navbar, Nav, Form, Row, Dropdown, DropdownButton} from 'react-bootstrap'
+import { Navbar, Nav, Form, Row, Dropdown, DropdownButton, Button} from 'react-bootstrap'
 import BabiteLogo from '../static/img/BabiteLogo.png'
 import Profile from '../static/img/Profile.png'
 import { Link } from "react-router-dom";
@@ -86,19 +86,20 @@ class NavbarBabite extends Component {
                   <Nav.Item className="nav-item">
                       {isAuthenticated ? 
                       <Row>
-                        <Nav.Link className="nav-link" onClick={handleLogout}>LogOut</Nav.Link>  
+                         
 
                         <Dropdown>
-                          <Dropdown.Toggle id="dropdown-toggle">
-                            <img class="profile-button" alt="profile-dropdown" src={Profile}></img>
+                          <Dropdown.Toggle className="profile-toggle">
+                            <img className="profile-button" alt="profile-dropdown" src={Profile}></img>
                           </Dropdown.Toggle>
 
                           <Dropdown.Menu >
-                            <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                          <Dropdown.Item className="nav-link" onClick={handleLogout}>LogOut</Dropdown.Item>
                             <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
                             <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown>
+
                       </Row>
                       :
                         <Row>
