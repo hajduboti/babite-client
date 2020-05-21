@@ -1,0 +1,9 @@
+.player-container{
+  height: 34vw;
+}
+
+@media all and (min-width: 480px) {
+  .player-container{
+    height: 37vw;
+  }
+}

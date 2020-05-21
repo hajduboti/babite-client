@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
+import Player from './Player'
 
-export default class MyComponent extends Component {
+
+export default class Channel extends Component {
   constructor(props) {
     super(props)
 
@@ -11,7 +13,7 @@ export default class MyComponent extends Component {
 
   render() {
     return (
-      <div>MyComponent</div>
+      <Player/>
     )
   }
 }
