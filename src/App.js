@@ -7,7 +7,7 @@ import NavbarBabite from './components/Navbar';
 import { Provider } from 'react-redux';
 import store from './store';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
 import Amplify from 'aws-amplify';
 import awsmobile from './aws-exports';
 
@@ -32,17 +32,18 @@ class App extends React.Component {
   render(){
 
   return (
+    <BrowserRouter>
     <Provider store={store}>
       <NavbarBabite isAuthenticated={this.state.isAuthenticated} username={this.state.username} />
-      <Router>
         <Switch>
           <Route exact path="/" component={Channels}/>
-          <Route component={Channel}/>
+          <Route exact path={`/${this.state.username}/programmes`} component={Channel}/>
         </Switch>
-      </Router>
       {/* An example of routing/paths that works. Commented for future use. */}
       {/* <Route path="/login" component={Login} /> */}
     </Provider>
+    </BrowserRouter>
+
   );
 }
 }

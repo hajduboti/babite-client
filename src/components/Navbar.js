@@ -50,7 +50,7 @@ class NavbarBabite extends Component {
     return (
       <Nav className="navbar navbar-expand-md background-color">
         <Navbar.Brand>
-          <img alt='babite-logo' src={BabiteLogo}></img>
+          <Link to="/"><img alt='babite-logo' src={BabiteLogo}></img></Link>
         </Navbar.Brand>
           <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
               <ul className="navbar-nav mr-auto">

@@ -1,6 +1,12 @@
-import Login from "./components/auth/Login";
+// import {BrowserRouter, Route, Switch} from "react-router-dom";
+// import App from "./App"
 
 
-<Route exact path="/login">
-  <Login />
-</Route>
+// <BrowserRouter>
+//   <Switch>
+//     <Route exact path="/" component={App} />
+//     {/* <Route path='/services' component={ServicePage} />
+//     <Route path='/products/singleproduct' component={SingleProductPage} />
+//     <Route exact path='/products' component={ProductPage} /> */}
+//   </Switch>
+// </BrowserRouter>
