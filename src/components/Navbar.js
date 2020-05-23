@@ -84,7 +84,7 @@ class NavbarBabite extends Component {
                             <img className="profile-button" alt="profile-dropdown" src={Profile}></img>
                           </Dropdown.Toggle>
                           <Dropdown.Menu >
-                          <Dropdown.Item ><Link to={username} className="card-title">{username}</Link></Dropdown.Item>
+                          <Dropdown.Item ><Link to={{pathname: `/${username}`}} className="card-title">{username}</Link></Dropdown.Item>
                           <Dropdown.Divider></Dropdown.Divider>
                           <Dropdown.Item onClick={handleLogout}>LogOut</Dropdown.Item>
                             <Dropdown.Item> <Link to={{pathname: `/${username}/programmes`}} className="card-title">Edit Programme</Link></Dropdown.Item>

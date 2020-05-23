@@ -3,6 +3,7 @@ import React from "react";
 import Channels from './components/Channels';
 import PageNotFound from './components/PageNotFound';
 import Channel from './components/Channel';
+import EditProgramme from './components/EditProgramme';
 import NavbarBabite from './components/Navbar';
 import { Provider } from 'react-redux';
 import store from './store';
@@ -35,9 +36,10 @@ class App extends React.Component {
     <BrowserRouter>
     <Provider store={store}>
       <NavbarBabite isAuthenticated={this.state.isAuthenticated} username={this.state.username} />
+      {/* Maybe this can be transferred to a router component which we can declare here */}
         <Switch>
           <Route exact path="/" component={Channels}/>
-          <Route exact path={`/${this.state.username}/programmes`} component={Channel}/>
+          <Route exact path={`/${this.state.username}/programmes`} component={EditProgramme}/>
         </Switch>
       {/* An example of routing/paths that works. Commented for future use. */}
       {/* <Route path="/login" component={Login} /> */}
