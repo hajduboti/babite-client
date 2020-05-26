@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { fetchChannels } from '../actions/channelActions';
 import { Navbar, Nav, Form, Row, Dropdown} from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import BabiteLogo from '../static/img/BabiteLogo.png'
 import Profile from '../static/img/Profile.png'
 import Popup from "./Popup"
@@ -45,11 +46,11 @@ class NavbarBabite extends Component {
       this.setState({showLogIn: false, showSignUp: false})
     }
   render() {
-  let {isAuthenticated} = this.props
+  let {isAuthenticated, username} = this.props
     return (
       <Nav className="navbar navbar-expand-md background-color">
         <Navbar.Brand>
-          <img alt='babite-logo' src={BabiteLogo}></img>
+          <Link to="/"><img alt='babite-logo' src={BabiteLogo}></img></Link>
         </Navbar.Brand>
           <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
               <ul className="navbar-nav mr-auto">
@@ -77,14 +78,16 @@ class NavbarBabite extends Component {
                   <Nav.Item className="nav-item">
                       {isAuthenticated ? 
                       <Row>
+                       
                         <Dropdown>
                           <Dropdown.Toggle className="profile-toggle">
-                            <img className="profile-button" alt="profile-dropdown" src={Profile}></img>
+                          <Link to="/"><img className="profile-button" alt="profile-dropdown" src={Profile} /></Link>
                           </Dropdown.Toggle>
                           <Dropdown.Menu >
+                          <Dropdown.Item ><Link to={{pathname: `/${username}`}} className="card-title">{username}</Link></Dropdown.Item>
+                          <Dropdown.Divider></Dropdown.Divider>
+                          <Dropdown.Item> <Link to={{pathname: `/${username}/programmes`}} className="card-title">Edit Programme</Link></Dropdown.Item>
                           <Dropdown.Item onClick={handleLogout}>LogOut</Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown>
                       </Row>
