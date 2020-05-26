@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { fetchChannels } from '../actions/channelActions';
+// import { fetchChannels } from '../actions/channelActions';
 import { Navbar, Nav, Form, Row, Dropdown} from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import BabiteLogo from '../static/img/BabiteLogo.png'
@@ -20,7 +20,7 @@ class NavbarBabite extends Component {
   }  
 
   componentDidMount(){
-    this.props.fetchChannels();
+    // this.props.fetchChannels();
   }
 
   // Displays certain popup type depending on which button is clicked
@@ -136,4 +136,4 @@ const mapStateToProps = state => ({
   channels: state.channels.items
 })
 
- export default connect(mapStateToProps, { fetchChannels })(NavbarBabite);
+ export default connect(mapStateToProps, { })(NavbarBabite);
