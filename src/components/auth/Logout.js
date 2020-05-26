@@ -8,8 +8,7 @@ export function handleLogout() {
           }
         }
         window.location =""
-        //TODO: Save user session somehow. Token, Cookies, etc.
-        // this.props.isAuthenticated = true;
+
 
       } catch (e) {
         alert(e.message);

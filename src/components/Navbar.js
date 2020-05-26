@@ -81,13 +81,13 @@ class NavbarBabite extends Component {
                        
                         <Dropdown>
                           <Dropdown.Toggle className="profile-toggle">
-                            <img className="profile-button" alt="profile-dropdown" src={Profile}></img>
+                          <Link to="/"><img className="profile-button" alt="profile-dropdown" src={Profile} /></Link>
                           </Dropdown.Toggle>
                           <Dropdown.Menu >
                           <Dropdown.Item ><Link to={{pathname: `/${username}`}} className="card-title">{username}</Link></Dropdown.Item>
                           <Dropdown.Divider></Dropdown.Divider>
+                          <Dropdown.Item> <Link to={{pathname: `/${username}/programmes`}} className="card-title">Edit Programme</Link></Dropdown.Item>
                           <Dropdown.Item onClick={handleLogout}>LogOut</Dropdown.Item>
-                            <Dropdown.Item> <Link to={{pathname: `/${username}/programmes`}} className="card-title">Edit Programme</Link></Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown>
                       </Row>
