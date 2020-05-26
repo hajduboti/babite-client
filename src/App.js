@@ -3,6 +3,8 @@ import React from "react";
 import Channels from './components/Channels';
 import PageNotFound from './components/PageNotFound';
 import Channel from './components/Channel';
+import Following from './components/Following';
+
 import NavbarBabite from './components/Navbar';
 import { Provider } from 'react-redux';
 import store from './store';
@@ -36,11 +38,10 @@ class App extends React.Component {
       <Router>
         <Switch>
           <Route exact path="/" component={Channels}/>
+          <Route exact path="/following" component={Following}/>
           <Route component={Channel}/>
         </Switch>
       </Router>
-      {/* An example of routing/paths that works. Commented for future use. */}
-      {/* <Route path="/login" component={Login} /> */}
     </Provider>
   );
 }

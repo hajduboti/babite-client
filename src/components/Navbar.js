@@ -11,12 +11,12 @@ import {handleLogout} from "./auth/Logout";
 import "../static/css/navbar.css";
 
 class NavbarBabite extends Component {
-  constructor(props){  
-    super(props);  
-    this.state = { showSignUp: false, showLogIn:false };  
+  constructor(props){
+    super(props);
+    this.state = { showSignUp: false, showLogIn:false };
     this.togglePopup = this.togglePopup.bind(this)
     this.neutralizePopupState = this.neutralizePopupState.bind(this)
-  }  
+  }
 
   componentDidMount(){
     this.props.fetchChannels();
@@ -54,10 +54,10 @@ class NavbarBabite extends Component {
           <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
               <ul className="navbar-nav mr-auto">
               {/* If user is authenticated, display following button, else, nothing */}
-              {isAuthenticated ? 
+              {isAuthenticated ?
                 <Nav.Item className="nav-item">
-                  <Nav.Link className="nav-link">Following</Nav.Link>
-                </Nav.Item> : null }   
+                  <Nav.Link className="nav-link" href="/following">Following</Nav.Link>
+                </Nav.Item> : null }
 
                   <Nav.Item className="nav-item">
                       <Nav.Link className="nav-link" href="/">Browse</Nav.Link>
@@ -75,7 +75,7 @@ class NavbarBabite extends Component {
           <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
               <ul className="navbar-nav ml-auto">
                   <Nav.Item className="nav-item">
-                      {isAuthenticated ? 
+                      {isAuthenticated ?
                       <Row>
                         <Dropdown>
                           <Dropdown.Toggle className="profile-toggle">
@@ -98,31 +98,31 @@ class NavbarBabite extends Component {
                           <Nav.Link className="nav-link" onClick={() => this.togglePopup('signup')}> Sign Up </Nav.Link>
                         </Nav.Item>
                         </Row>
-                      } 
+                      }
 
                   </Nav.Item>
               </ul>
-              {this.state.showLogIn ?  
-                <Popup  
+              {this.state.showLogIn ?
+                <Popup
                           isOpen={true}
-                          heading='Log In' 
-                          subheading='Please enter credentials' 
-                          html={<Login/>}  
+                          heading='Log In'
+                          subheading='Please enter credentials'
+                          html={<Login/>}
                           onclose={this.neutralizePopupState}
-                />  
-                : null  
-                }  
-                {this.state.showSignUp ?  
+                />
+                : null
+                }
+                {this.state.showSignUp ?
 
-                <Popup  
+                <Popup
                           isOpen={true}
-                          heading='Sign Up' 
-                          subheading='Please enter credentials' 
-                          html={<Signup/>} 
-                          onclose={this.neutralizePopupState} 
-                />  
-                : null  
-                }  
+                          heading='Sign Up'
+                          subheading='Please enter credentials'
+                          html={<Signup/>}
+                          onclose={this.neutralizePopupState}
+                />
+                : null
+                }
           </div>
       </Nav>
     )
