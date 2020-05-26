@@ -31,6 +31,7 @@ class Signup extends Component {
         }
 
     async handleSubmit(event) {
+      event.preventDefault()
       try {
         const newUser = await Auth.signUp({
             username: this.state.username,
