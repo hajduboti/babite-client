@@ -32,6 +32,6 @@ export const getChannelByName = (channelName) => dispatch => {
     .then(channelData =>
       dispatch({
         type: GET_CHANNEL,
-        payload: channelData
+        payload: channelData.body
     }))
 }

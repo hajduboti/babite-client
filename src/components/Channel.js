@@ -6,14 +6,6 @@ import { connect } from 'react-redux';
 
 
 class Channel extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      channelName : 'MTV'
-    }
-  }
-
   componentDidMount(){
     this.props.getChannelByName('MTV');
   }
@@ -31,7 +23,7 @@ Channel.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  channel: state.channelData
+  channel: state.channelName
 })
 
  export default connect(mapStateToProps, { getChannelByName })(Channel);
