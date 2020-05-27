@@ -1,7 +1,9 @@
-import React from 'react';  
-import '../static/css/popup.css';  
+import React from 'react';
+import '../static/css/popup.css';
+import { Button } from 'react-bootstrap'
 
-class Popup extends React.Component {  
+
+class Popup extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -26,30 +28,29 @@ class Popup extends React.Component {
 
     componentDidMount(){
         document.addEventListener("keydown", this.escFunction, false);
-        
-
     }
+
     componentWillUnmount(){
         document.removeEventListener("keydown", this.escFunction, false);
-
     }
+    
   render() {
-    return (  
+    return (
         <div>
-            {this.state.isOpen ? 
-                <div className='popup'>  
-                <div className='popup_inner'>  
+            {this.state.isOpen ?
+                <div className='popup'>
+                <div className='popup_inner'>
                 <h2>{this.props.heading}</h2>
                 <h5>{this.props.subheading}</h5>
                     {this.props.html}
-                <button onClick={this.exitPopup}>Exit</button>  
-                </div>  
+                <Button onClick={this.exitPopup} variant="outline-dark">Exit</Button>
+                </div>
                 </div>
                 : null }
         </div>
-   
-    );  
-    }  
-    }  
+
+    );
+    }
+    }
 
 export default Popup;

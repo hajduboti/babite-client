@@ -1,4 +1,4 @@
-import { FETCH_CHANNELS, CREATE_CHANNEL } from '../actions/types';
+import { FETCH_CHANNELS, CREATE_CHANNEL, GET_CHANNEL } from '../actions/types';
 
 const initialState = {
   items: [],
@@ -16,6 +16,11 @@ export default function(state = initialState, action){
         return {
           ...state,
           item: action.payload
+        }
+      case GET_CHANNEL:
+        return {
+          ...state,
+          items: action.payload
         }
       default:
         return state;

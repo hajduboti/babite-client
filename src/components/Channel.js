@@ -1,19 +1,26 @@
 import React, { Component } from 'react'
 import Player from './Player'
+import { getChannelByName } from '../actions/channelActions';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 
-export default class Channel extends Component {
+class Channel extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-
+      channelName : 'MTV'
     }
+  }
+
+  componentDidMount(){
+    this.props.getChannelByName('MTV');
   }
 
   render() {
     return (
-      <Player/>
+      <Player />
     )
   }
 }
