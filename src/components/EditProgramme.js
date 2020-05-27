@@ -6,21 +6,26 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Container } from 'react-bootstrap';
 import "../static/css/programme.css";
 
+
 const localizer = momentLocalizer(moment);
-const propTypes = {}
+const date = moment(); // Thursday Feb 2015
+const dow = date.day();
 
 // Start week at Monday rather than Sunday.
-moment.locale('ko', {week: {dow: 1,doy: 1,},});
+moment.locale('ko', {week: {dow: dow}});
+
+
+const propTypes = {}
 
 class EditProgramme extends Component {
-    constructor(props){  
-      super(props);  
+    constructor(props){
+      super(props);
       const events = [{}]
       this.state = {
         events
       };
-    } 
-    
+    }
+
     componentDidMount(){
     }
 
@@ -43,7 +48,7 @@ class EditProgramme extends Component {
       // console.log(moment())
         return(
           <Container className="calendar-background">
-            <div> 
+            <div>
                 <Calendar
                 selectable
                 events={this.state.events}
@@ -52,7 +57,9 @@ class EditProgramme extends Component {
                 defaultView='day'
                 onSelectEvent={event => alert(event.title)}
                 onSelectSlot={this.handleSelect}
-
+                format={"DD/MM/YYYY HH:mm"}
+                startAccessor="start"
+                      endAccessor="end"
             />
             </div>
             </Container>
@@ -65,6 +72,6 @@ EditProgramme.propTypes = propTypes
 
 const mapStateToProps = state => ({
   })
-  
+
 //    export default connect(mapStateToProps, { fetchProgrammes })(EditProgramme);
    export default connect(mapStateToProps, { })(EditProgramme);

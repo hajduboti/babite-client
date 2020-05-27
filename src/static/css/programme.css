@@ -1,3 +1,72 @@
+@media (min-width: 1200px)
+<style>
+.container, .container-lg, .container-md, .container-sm, .container-xl {
+    max-width: 1140px;
+}
+
+
+.rbc-allday-cell {
+  display: none;
+  border-top: none;
+}
+.rbc-time-view .rbc-header {
+  border-bottom: none;
+  border-top: none;
+}
+
 .calendar-background{
-    background-color: #FFFFFF;
+    background-color: #003545;
+    opacity: .93;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 5px;
+}
+.rbc-toolbar-label{
+  color: #ed6363;
+  font-weight: bold;
+  font-variant: small-caps;
+  font-size: 20px;
+}
+
+.rbc-time-content {
+  border-top: none;
+}
+
+.rbc-toolbar button:active {
+  background-color: #ed6363;
+  font-weight: bold;
+
+  color: #003545;
+}
+
+.rbc-toolbar button.rbc-active {
+  background-color: #ed6363;
+  font-weight: bold;
+  color: #003545;
+}
+
+.rbc-btn-group button{
+  border-color: #ddd;
+}
+
+
+.rbc-toolbar button {
+  background-color: #00454a;
+  font-weight: bold;
+
+  color: #ed6363;
+}
+
+.rbc-row-content {
+  background-color: #003545;
+}
+.rbc-time-column {
+  background-color: #003545;
+  color: white;
+}
+
+.rbc-events-container{
+  background-color: #003545;
+  border-color: #DDD;
+
 }
