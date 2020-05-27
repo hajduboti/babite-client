@@ -19,7 +19,7 @@ class Channel extends Component {
 
 Channel.propTypes = {
   getChannelByName: PropTypes.func.isRequired,
-  channel: PropTypes.array.isRequired
+  // channel: PropTypes.array.isRequired
 };
 
 const mapStateToProps = state => ({

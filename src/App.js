@@ -1,7 +1,5 @@
 import React from "react";
-// import logo from './logo.svg';
 import Channels from './components/Channels';
-import PageNotFound from './components/PageNotFound';
 import Channel from './components/Channel';
 import EditProgramme from './components/EditProgramme';
 import Following from './components/Following';
@@ -9,7 +7,7 @@ import NavbarBabite from './components/Navbar';
 import { Provider } from 'react-redux';
 import store from './store';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {BrowserRouter, Route, Router, Switch} from "react-router-dom";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
 import Amplify from 'aws-amplify';
 import awsmobile from './aws-exports';
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { fetchChannels } from '../actions/channelActions';
+// import { fetchChannels } from '../actions/channelActions';
 import { Navbar, Nav, Form, Row, Dropdown} from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import BabiteLogo from '../static/img/BabiteLogo.png'
@@ -20,26 +20,28 @@ class NavbarBabite extends Component {
   }
 
   componentDidMount(){
-    this.props.fetchChannels();
+    // this.props.fetchChannels();
   }
 
   // Displays certain popup type depending on which button is clicked
   togglePopup(popUpType) {
     switch(popUpType){
-    case "login":
-      this.setState({
-        showLogIn: !this.state.showLogIn,
-        showSignUp: false
-      });
-      break;
+      case "login":
+        this.setState({
+          showLogIn: !this.state.showLogIn,
+          showSignUp: false
+        });
+        break;
+      case "signup":
+        this.setState({
+            showSignUp: !this.state.showSignUp,
+            showLogIn: false
+        });
+        break;
+      default:
+        break;
+      }
 
-    case "signup":
-      this.setState({
-          showSignUp: !this.state.showSignUp,
-          showLogIn: false
-      });
-      break;
-     }
     }
     // When the form is closed via esc. or exit, we set states to false so that the toggle is not broken, which requires double clicking the button to open the form (state of showLogin/Signup is still true and is set to false on click again)
     neutralizePopupState() {
@@ -78,7 +80,7 @@ class NavbarBabite extends Component {
                   <Nav.Item className="nav-item">
                       {isAuthenticated ?
                       <Row>
-                       
+
                         <Dropdown>
                           <Dropdown.Toggle className="profile-toggle">
                           <Link to="/"><img className="profile-button" alt="profile-dropdown" src={Profile} /></Link>
@@ -136,4 +138,4 @@ const mapStateToProps = state => ({
   channels: state.channels.items
 })
 
- export default connect(mapStateToProps, { fetchChannels })(NavbarBabite);
+ export default connect(mapStateToProps, { })(NavbarBabite);

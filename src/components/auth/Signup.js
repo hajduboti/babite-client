@@ -1,29 +1,29 @@
 import React from 'react'
 import {Component } from "react";
-import { Button, FormGroup, FormControl, Form } from "react-bootstrap";
+import { Button, FormGroup, FormControl } from "react-bootstrap";
 import "../../static/css/login.css";
 import { Auth } from "aws-amplify";
 class Signup extends Component {
-  /* 
+  /*
     TODO:
       - DOB field?
       - Fix error message on confirm sign up button click 'network error'
       - Fix error when clicking confirmation link in email (lambda error)
-  
+
   */
-    constructor(props){  
-        super(props);  
-        this.state = { 
+    constructor(props){
+        super(props);
+        this.state = {
             username: "",
             password: "",
             confirmPassword: "",
             email: "",
-         };  
+         };
          this.validateForm = this.validateForm.bind(this)
          this.handleSubmit = this.handleSubmit.bind(this)
 
 
-    }   
+    }
 
     validateForm() {
       console.log("validated")
@@ -33,7 +33,7 @@ class Signup extends Component {
     async handleSubmit(event) {
       event.preventDefault()
       try {
-        const newUser = await Auth.signUp({
+        await Auth.signUp({
             username: this.state.username,
             password: this.state.password,
             attributes: {
@@ -46,7 +46,7 @@ class Signup extends Component {
 
         }
       }
-    
+
 
     // Handle changes on fields in the form
     handleChange(event, field) {
@@ -72,13 +72,14 @@ class Signup extends Component {
           case "email":
               this.setState({
                 email: value
-            }); 
+            });
             break;
-           
+          default:
+            break;
         }
     }
     renderForm(){
-      
+
     }
 render(){
   return (
@@ -122,7 +123,7 @@ render(){
             type="email"
           />
         </FormGroup>
-        
+
         <Button block disabled={!this.validateForm()} type="submit">
           Sign Up
         </Button>
@@ -132,4 +133,3 @@ render(){
 }
 }
 export default Signup;
-

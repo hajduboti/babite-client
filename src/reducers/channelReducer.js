@@ -20,7 +20,7 @@ export default function(state = initialState, action){
       case GET_CHANNEL:
         return {
           ...state,
-          items: action.payload
+          currentChannel: action.payload
         }
       default:
         return state;
