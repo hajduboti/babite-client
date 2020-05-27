@@ -27,8 +27,10 @@ export const createChannel = (channelData) => dispatch => {
 
 
 export const getChannelByName = (channelName) => dispatch => {
-  fetch(`https://in2agdk5ja.execute-api.eu-central-1.amazonaws.com/testing/channels/${channelName}`)
-    .then(res => res.json())
+  fetch(`https://in2agdk5ja.execute-api.eu-central-1.amazonaws.com/testing/channels/${channelName}`, {
+    mode: 'cors'
+  })
+    .then(res => console.log(res))
     .then(channelData =>
       dispatch({
         type: GET_CHANNEL,
