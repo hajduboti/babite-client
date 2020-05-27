@@ -52,7 +52,7 @@ class NavbarBabite extends Component {
     return (
       <Nav className="navbar navbar-expand-md background-color">
         <Navbar.Brand>
-          <Link to="/"><img alt='babite-logo' src={BabiteLogo}></img></Link>
+        <Nav.Link className="nav-link" href="/"><img alt='babite-logo' src={BabiteLogo}></img></Nav.Link>
         </Navbar.Brand>
           <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
               <ul className="navbar-nav mr-auto">
@@ -83,7 +83,7 @@ class NavbarBabite extends Component {
 
                         <Dropdown>
                           <Dropdown.Toggle className="profile-toggle">
-                          <Link to="/"><img className="profile-button" alt="profile-dropdown" src={Profile} /></Link>
+                          <img className="profile-button" alt="profile-dropdown" src={Profile} />
                           </Dropdown.Toggle>
                           <Dropdown.Menu >
                           <Dropdown.Item ><Link to={{pathname: `/${username}`}} className="card-title">{username}</Link></Dropdown.Item>
