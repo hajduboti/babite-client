@@ -1,3 +1,7 @@
 .calendar-background{
     background-color: #FFFFFF;
 }
+
+.rbc-event {
+    z-index: 999 !important;
+  }
