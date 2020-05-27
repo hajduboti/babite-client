@@ -3,49 +3,67 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment'
 import { connect } from 'react-redux';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { Container } from 'react-bootstrap';
+import "../static/css/programme.css";
 
 const localizer = momentLocalizer(moment);
+const propTypes = {}
 
+// Start week at Monday rather than Sunday.
+moment.locale('ko', {week: {dow: 1,doy: 1,},});
 
 class EditProgramme extends Component {
     constructor(props){  
       super(props);  
-      const events = [
-        {
-        }
-      ]
+      const events = [{}]
       this.state = {
-        name: 'React',
         events
       };
     } 
     
     componentDidMount(){
-    //   this.props.fetchProgrammes();
+    }
+
+    handleSelect = ({ start, end }) => {
+      const title = window.prompt('New Event name')
+      if (title)
+        this.setState({
+          events: [
+            ...this.state.events,
+            {
+              start,
+              end,
+              title,
+            },
+          ],
+        })
     }
 
     render() {
+      // console.log(moment())
         return(
+          <Container className="calendar-background">
             <div> 
                 <Calendar
+                selectable
                 events={this.state.events}
-                startAccessor="start"
-                endAccessor="end"
-                defaultDate={moment().toDate()}
                 localizer={localizer}
+                views={['day', 'week']}
+                defaultView='day'
+                onSelectEvent={event => alert(event.title)}
+                onSelectSlot={this.handleSelect}
+
             />
             </div>
+            </Container>
         )
     }
 
 }
-
-// Setup the localizer by providing the moment (or globalize) Object
-// to the correct localizer.
+EditProgramme.propTypes = propTypes
 
 
 const mapStateToProps = state => ({
-    // channels: state.channels.items
   })
   
 //    export default connect(mapStateToProps, { fetchProgrammes })(EditProgramme);
