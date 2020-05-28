@@ -16,23 +16,30 @@ class EditProgramme extends Component {
     constructor(props){  
       super(props);  
       const events = [{}]
+
       this.state = {
         events,
         isOpen: false,
-
+        url: '',
+        timestamp: ''
       };
       this.renderModal = this.renderModal.bind(this)
+      this.handleChange = this.handleChange.bind(this);
+      this.handleSelect = this.handleSelect.bind(this);
+
     } 
     
     componentDidMount(){
     }
 
     // When selecting time range on calendar, toggle isOpen to display popup
-    handleSelect = ({ start, end, url, timestamp }) => {
+    handleSelect = ({ start, end }) => {
+      let url = this.state.url
+      let timestamp = this.state.timestamp
       this.setState({isOpen: !this.state.isOpen})
-
-      //This saves event to calendare if valid values
-      if(url){
+ 
+      //This saves event to calendar if valid values
+      if(start && end && url){  
         this.setState({
           events: [
             ...this.state.events,
@@ -44,23 +51,41 @@ class EditProgramme extends Component {
             },
           ],
           isOpen: false
-        })
+        },
+        // Clear state for next input
+        this.setState({
+          url: '',
+          timestamp: ''
+        }))
       }
-     
     }
 
-    saveEvent = ({start, end, url, timestamp}) => {
+    saveEvent = (event) => {
      this.setState({isOpen: false})
+     console.log(event)
+    // this.state.url = 
+    // this.state.timestamp
   
+    }
+
+    handleChange(event) {
+      // this.setState({url: event.target.url, timestamp: event.target.timestamp});
+      if(event.target.id === 'url'){
+        this.setState({url: event.target.value});
+
+      }else if(event.target.id === 'time'){
+        this.setState({timestamp: event.target.value});
+      }
+
     }
 
     renderModal = () => {
 
-      if (!this.state.isOpen){
-        return;
-      } else{
+      // if (!this.state.isOpen){
+      //   return;
+      // } else{
         return(
-          <Modal
+        <Modal data-backdrop="false"
           keyboard
           show={this.state.isOpen}
           onHide={() => this.setState({isOpen: false})}
@@ -73,14 +98,14 @@ class EditProgramme extends Component {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-            <input placeholder="content url"></input>
-            <input placeholder="timestamp"></input>
+            <input onChange={this.handleChange} defaultValue={this.state.url}  placeholder="content url" id='url'></input>
+            <input onChange={this.handleChange} defaultValue={this.state.timestamp} placeholder="timestamp" id='time'></input>
             <button onClick={this.saveEvent}>Confirm</button>
 
           </Modal.Body>
         </Modal>
        )
-      }
+      // }
     }
 
     render() {
@@ -94,7 +119,7 @@ class EditProgramme extends Component {
             localizer={localizer}
             views={['day', 'week']}
             defaultView='day'
-            onSelectEvent={event => alert(event.title)}
+            onSelectEvent={event => alert(event.url + " " + event.timestamp)}
             onSelectSlot={this.handleSelect}
 
           />

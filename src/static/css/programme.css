@@ -2,6 +2,16 @@
     background-color: #FFFFFF;
 }
 
-.rbc-event {
+/* .rbc-event {
     z-index: 999 !important;
-  }
+  } */
+
+
+/* Prevents readonly input field bug */
+#time{
+    z-index: 999999;
+}
+
+#url{
+    z-index: 999999;
+}
