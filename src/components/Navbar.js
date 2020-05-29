@@ -48,9 +48,10 @@ class NavbarBabite extends Component {
       this.setState({showLogIn: false, showSignUp: false})
     }
   render() {
-  let {isAuthenticated, username} = this.props
+  let {isAuthenticated, username, channels} = this.props
     return (
       <Nav className="navbar navbar-expand-md background-color">
+        {channels}
         <Navbar.Brand>
         <Nav.Link className="nav-link" href="/"><img alt='babite-logo' src={BabiteLogo}></img></Nav.Link>
         </Navbar.Brand>
@@ -134,8 +135,11 @@ class NavbarBabite extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  channels: state.channels.items
-})
+const mapStateToProps = (state, ownProps) => {
+return {}
+};
 
- export default connect(mapStateToProps, { })(NavbarBabite);
+
+
+
+export default connect(mapStateToProps)(NavbarBabite);

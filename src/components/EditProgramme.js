@@ -1,51 +1,44 @@
 import React, {Component} from 'react'
-import moment from 'moment'
 import { connect } from 'react-redux';
 import { Container, Button, Modal } from 'react-bootstrap';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
+import Grid from '@material-ui/core/Grid';
+import DateFnsUtils from '@date-io/date-fns';
+
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 
 import "../static/css/programme_main.css"
 import "../static/css/programme.css"
 
-// Start week at Monday rather than Sunday.
-moment.locale('ko', {week: {dow: 1,doy: 1,},});
 
 export default class EditProgramme extends Component {
   calendarRef = React.createRef()
     constructor(props){  
       super(props);  
-    //  this.renderModal = this.renderModal.bind(this)
-    this.handleChange = this.handleChange.bind(this);
-
+      this.handleChange = this.handleChange.bind(this);
+      this.handleDateChange = this.handleDateChange.bind(this)
     } 
+
     state = {
       calendarWeekends: true,
       calendarEvents: [{}],
       url: '',
-      timestamp: ''
+      timestamp: '',
+      selectedDate: '',
+
     };
-    
+
     componentDidMount(){
+      this.setState({selectedDate: new Date(), selectedTime: new Date().getTime() })
     }
+    
 
-
-  
-    // render() {
-    //   return (
-    //     <Container className= "container">
-
-    //     <FullCalendar dateClick={this.handleDateClick}
-    //      plugins={[ dayGridPlugin, interactionPlugin ]} />
-    //    </Container>
-
-    //   )
-    // }
-  
-    // handleDateClick = (arg) => { // bind with an arrow function
-    //   alert(arg.dateStr)
-    // }
     render() {
         return(
           <Container className= "container">
@@ -62,6 +55,7 @@ export default class EditProgramme extends Component {
             events={this.state.calendarEvents}
             dateClick={this.saveEvent}
             editable={true}
+            selectable={true}
 
             />
         </Container>
@@ -71,14 +65,15 @@ export default class EditProgramme extends Component {
       if(this.state.isOpen){
         this.setState({calendarEvents: this.state.calendarEvents.concat({
           title: this.state.url,
-          start: '2020-05-28T12:30:00Z',
+          start: this.state.selectedDate,
           // allDay: arg.allDay
         })
       })
     }
   };
 
-   saveEvent = (event) => {
+   saveEvent = (arg) => {
+    this.setState({selectedDate: arg.dateStr})
     this.setState({isOpen: !this.state.isOpen}, this.handleDateClick())
     }
 
@@ -94,11 +89,12 @@ export default class EditProgramme extends Component {
   
   }
 
+  handleDateChange = (date) => {
+    this.setState({selectedDate: date});
+  };
+
   renderModal = () => {
 
-    // if (!this.state.isOpen){
-    //   return;
-    // } else{
       return(
         <Modal data-backdrop="false"
           keyboard
@@ -106,27 +102,47 @@ export default class EditProgramme extends Component {
           onHide={() => this.setState({isOpen: false})}
           aria-labelledby="ModalHeader"
         >
-  
-          <Modal.Header closeButton>
-          <Modal.Title id="example-custom-modal-styling-title">
-            Enter Content
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-            <input onChange={this.handleChange} defaultValue={this.state.url}  placeholder="content url" id='url'></input>
-            <input onChange={this.handleChange} defaultValue={this.state.timestamp} placeholder="timestamp" id='time'></input>
-            <button onClick={this.saveEvent}>Confirm</button>
-  
-          </Modal.Body>
-        </Modal>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <Grid container justify="space-around">
+              <KeyboardDatePicker
+                disableToolbar
+                variant="inline"
+                format="MM/dd/yyyy"
+                margin="normal"
+                id="date-picker-inline"
+                label="Date picker inline"
+                value={this.state.selectedDate}
+                onChange={this.handleDateChange}
+                KeyboardButtonProps={{
+                  'aria-label': 'change date',
+                }}
+              />
+
+              <KeyboardTimePicker
+                margin="normal"
+                id="time-picker"
+                label="Time picker"
+                value={this.state.selectedDate}
+                onChange={this.handleDateChange}
+                KeyboardButtonProps={{
+                  'aria-label': 'change time',
+                }}
+                />
+              </Grid>
+              </MuiPickersUtilsProvider>
+
+                <Modal.Header closeButton>
+                <Modal.Title id="example-custom-modal-styling-title">
+                  Enter Content
+                </Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                  <input onChange={this.handleChange} defaultValue={this.state.url}  placeholder="content url" id='url'></input>
+                  <input onChange={this.handleChange} defaultValue={this.state.timestamp} placeholder="timestamp" id='time'></input>
+                  <button onClick={this.saveEvent}>Confirm</button>
+        
+                </Modal.Body>
+              </Modal>
        )
-    // }
   }
 }
-
-
-
-// const mapStateToProps = state => ({
-// })
-  
-// export default connect(mapStateToProps, { })(EditProgramme);
