@@ -7,23 +7,31 @@ import { connect } from 'react-redux';
 
 class Channel extends Component {
   componentDidMount(){
-    this.props.getChannelByName('MTV');
+    const name = window.location.pathname.replace('/','');
+    this.props.getChannelByName(name);
+    const channelData = this.props.getChannelByName(name);
   }
 
   render() {
+    const data = this.props.channel;
     return (
-      <Player />
+      <div>
+        <Player />
+        {data}
+      </div>
+
+
     )
   }
 }
 
 Channel.propTypes = {
   getChannelByName: PropTypes.func.isRequired,
-  // channel: PropTypes.array.isRequired
+  channel: PropTypes.string
 };
 
 const mapStateToProps = state => ({
-  channel: state.channelName
+  channel: state.channels.currentChannel
 })
 
  export default connect(mapStateToProps, { getChannelByName })(Channel);
