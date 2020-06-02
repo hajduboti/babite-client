@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Container, Button, Modal } from 'react-bootstrap';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
+import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
 import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
@@ -45,18 +46,28 @@ export default class EditProgramme extends Component {
           {this.renderModal()}
           <FullCalendar
             ref={this.calendarRef}
-            defaultView="dayGridDay"
+            // defaultView="dayGridDay"
             header={{
               left: "prev,next today",
               center: "title",
-              right: "dayGridWeek, dayGridDay"
+              right: "timeGridWeek, timeGridDay"
             }}
-            plugins={[ dayGridPlugin, interactionPlugin ]} 
+            slotDuration={{
+              "hours": 1
+            }}
+            defaultView={'timeGridWeek'}
+            plugins={[ timeGridPlugin, dayGridPlugin, interactionPlugin ]} 
             events={this.state.calendarEvents}
             dateClick={this.saveEvent}
             editable={true}
             selectable={true}
-
+            slotLabelFormat={[
+              {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12:false
+              }
+              ]}
             />
         </Container>
         )
@@ -122,6 +133,7 @@ export default class EditProgramme extends Component {
                 margin="normal"
                 id="time-picker"
                 label="Time picker"
+                ampm={false}
                 value={this.state.selectedDate}
                 onChange={this.handleDateChange}
                 KeyboardButtonProps={{
