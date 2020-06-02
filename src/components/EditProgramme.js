@@ -28,6 +28,7 @@ export default class EditProgramme extends Component {
       this.handleChange = this.handleChange.bind(this);
       this.handleDateChange = this.handleDateChange.bind(this);
       this.handleEventClick = this.handleEventClick.bind(this);
+      this.saveProgramme = this.saveProgramme.bind(this);
     } 
 
     state = {
@@ -76,6 +77,7 @@ export default class EditProgramme extends Component {
               }
               ]}
             />
+            <button onClick={this.saveProgramme}>Confirm Programme</button>
         </Container>
         )
     }
@@ -85,36 +87,42 @@ export default class EditProgramme extends Component {
         this.setState({calendarEvents: this.state.calendarEvents.concat({
           title: this.state.url,
           start: this.state.selectedDate,
-          // allDay: arg.allDay
         })
       })
     }else if(this.state.isSelectedEvent){
-      // TODO: Replace existing event in array with updated event
-      console.log(this.state.selectedDate)
       this.setState({calendarEvents: this.state.calendarEvents.concat({
         title: this.state.url,
         start: this.state.selectedDate,
-        // allDay: arg.allDay
       })
     
     })
   }
+
   };
   handleEventClick = (calEvent, jsEvent, view) => {
     if(calEvent.event){
-      let date = calEvent.event.start
-      this.setState({isSelectedEvent: !this.state.isSelectedEvent}, this.handleDateClick())
-      this.setState({selectedEvent: calEvent, selectedDate:date })
+      
+      let date = moment(calEvent.event.start).format("YYYY-MM-DD HH:mm:ss")
+      this.setState({selectedDate:date })
+      //This needs to be refactored, Christopher
+      for(let item in this.state.calendarEvents){
+        if(calEvent.event.title === this.state.calendarEvents[item].title && date === this.state.calendarEvents[item].start ){
+          this.state.calendarEvents.splice(this.state.calendarEvents.indexOf(this.state.calendarEvents[item]), 1)
+        }
+      }
 
-    }else{
-      console.log("something went wrong")
     }
+      this.setState({isSelectedEvent: !this.state.isSelectedEvent}, this.handleDateClick())
     }
 
    saveEvent = (arg) => {
-     console.log(arg)
-    this.setState({selectedDate: arg.dateStr})
+     let date = moment(arg.dateStr).format("YYYY-MM-DD HH:mm:ss")
+    this.setState({selectedDate:date})
     this.setState({isNewEventModal: !this.state.isNewEventModal}, this.handleDateClick())
+    }
+
+    saveProgramme(){
+      console.log(this.state.calendarEvents)
     }
 
   handleChange(event) {
@@ -182,6 +190,7 @@ export default class EditProgramme extends Component {
   }
 
   handleDateChange = (date) => {
+    date = moment(date).format("YYYY-MM-DD HH:mm:ss")
     this.setState({selectedDate: date});
   };
 
