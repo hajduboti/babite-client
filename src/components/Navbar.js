@@ -70,7 +70,7 @@ class NavbarBabite extends Component {
           </div>
           <div className="mx-auto order-0">
               <Form className="navbar-brand mx-auto">
-                <input className="form-control-override mr-sm-2" type="text" placeholder="Search" />
+                <input className="form-control-override mr-sm-2" type="text" placeholder="Oi, I still exist and dont work" />
               </Form>
               <button className="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
                   <span className="navbar-toggler-icon"></span>

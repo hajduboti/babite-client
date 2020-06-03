@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
-import { connect } from 'react-redux';
-import { Container, Button, Modal } from 'react-bootstrap';
+import { Container, Modal } from 'react-bootstrap';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -28,23 +27,20 @@ export default class EditProgramme extends Component {
       this.handleChange = this.handleChange.bind(this);
       this.handleDateChange = this.handleDateChange.bind(this);
       this.handleEventClick = this.handleEventClick.bind(this);
+      this.handleEventDrag = this.handleEventDrag.bind(this);
       this.saveProgramme = this.saveProgramme.bind(this);
     } 
 
     state = {
       calendarWeekends: true,
-      calendarEvents: [{}],
+      calendarEvents: [],
       url: '',
       timestamp: '',
       selectedDate: '',
-      selectedEvent: ''
+      selectedEvent: '',
+      endDate: ''
 
-    };
-
-    componentDidMount(){
-      // this.setState({selectedDate: new Date(), selectedTime: new Date().getTime() })
-    }
-    
+    };    
 
     render() {
         return(
@@ -58,9 +54,9 @@ export default class EditProgramme extends Component {
               center: "title",
               right: "timeGridWeek, timeGridDay"
             }}
-            slotDuration={{
-              "hours": 1
-            }}
+            // slotDuration={{
+            //   "hours": 1
+            // }}
             defaultView={'timeGridWeek'}
             plugins={[ timeGridPlugin, dayGridPlugin, interactionPlugin ]} 
             events={this.state.calendarEvents}
@@ -69,13 +65,23 @@ export default class EditProgramme extends Component {
             editable={true}
             selectable={true}
             allDayText={''}
+            slotDuration={'00:30:00'}
             slotLabelFormat={[
               {
                   hour: '2-digit',
                   minute: '2-digit',
-                  hour12:false
+                  hour12:false,
+                  // hourCycle: '12'
               }
               ]}
+              eventTimeFormat= {{ // like '14:30:00'
+              hour: '2-digit',
+              minute: '2-digit',
+              meridiem: false,
+              hour12: false
+            }}
+            locale={'en-GB'}
+            eventDrop={this.handleEventDrag}
             />
             <button onClick={this.saveProgramme}>Confirm Programme</button>
         </Container>
@@ -87,27 +93,50 @@ export default class EditProgramme extends Component {
         this.setState({calendarEvents: this.state.calendarEvents.concat({
           title: this.state.url,
           start: this.state.selectedDate,
+          end: this.state.endDate
         })
       })
     }else if(this.state.isSelectedEvent){
       this.setState({calendarEvents: this.state.calendarEvents.concat({
         title: this.state.url,
         start: this.state.selectedDate,
+        end: this.state.endDate
       })
     
     })
   }
-
   };
+
+  handleEventDrag = (eventDropInfo ) => {
+    let calendarEvents = this.state.calendarEvents
+    let oldEvent = eventDropInfo.oldEvent
+    let oldEventDate = moment(oldEvent.start).format("YYYY-MM-DD HH:mm:ss")
+    let newEvent = eventDropInfo.event
+    // console.log(eventDropInfo.event)
+
+    for(let item in calendarEvents){
+      if(oldEvent.title === calendarEvents[item].title && oldEventDate === calendarEvents[item].start ){
+        calendarEvents.splice(calendarEvents.indexOf(calendarEvents[item]), 1)
+      }
+  }
+  this.setState({calendarEvents: this.state.calendarEvents.concat({
+    title: newEvent.title,
+    start: moment(newEvent.start).format("YYYY-MM-DD HH:mm:ss"),
+    })
+  })
+  }
+  
   handleEventClick = (calEvent, jsEvent, view) => {
-    if(calEvent.event){
+    let calendarEvents = this.state.calendarEvents
+    let currentClickedEvent = calEvent.event
+    if(currentClickedEvent){
       
-      let date = moment(calEvent.event.start).format("YYYY-MM-DD HH:mm:ss")
+      let date = moment(currentClickedEvent.start).format("YYYY-MM-DD HH:mm:ss")
       this.setState({selectedDate:date })
       //This needs to be refactored, Christopher
-      for(let item in this.state.calendarEvents){
-        if(calEvent.event.title === this.state.calendarEvents[item].title && date === this.state.calendarEvents[item].start ){
-          this.state.calendarEvents.splice(this.state.calendarEvents.indexOf(this.state.calendarEvents[item]), 1)
+      for(let item in calendarEvents){
+        if(currentClickedEvent.title === calendarEvents[item].title && date === calendarEvents[item].start ){
+          calendarEvents.splice(calendarEvents.indexOf(calendarEvents[item]), 1)
         }
       }
 
@@ -116,7 +145,7 @@ export default class EditProgramme extends Component {
     }
 
    saveEvent = (arg) => {
-     let date = moment(arg.dateStr).format("YYYY-MM-DD HH:mm:ss")
+    let date = moment(arg.dateStr).format("YYYY-MM-DD HH:mm:ss")
     this.setState({selectedDate:date})
     this.setState({isNewEventModal: !this.state.isNewEventModal}, this.handleDateClick())
     }
@@ -128,6 +157,7 @@ export default class EditProgramme extends Component {
   handleChange(event) {
     // this.setState({url: event.target.url, timestamp: event.target.timestamp});
     if(event.target.id === 'url'){
+      //Get youtube video url duration
       this.setState({url: event.target.value});
   
     }else if(event.target.id === 'time'){
@@ -146,7 +176,7 @@ export default class EditProgramme extends Component {
       >
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <Grid container justify="space-around">
-            <KeyboardDatePicker
+            {/* <KeyboardDatePicker
               disableToolbar
               variant="inline"
               format="MM/dd/yyyy"
@@ -158,7 +188,7 @@ export default class EditProgramme extends Component {
               KeyboardButtonProps={{
                 'aria-label': 'change date',
               }}
-            />
+            /> */}
 
             <KeyboardTimePicker
               margin="normal"
@@ -181,7 +211,7 @@ export default class EditProgramme extends Component {
             </Modal.Header>
             <Modal.Body>
                 <input onChange={this.handleChange} defaultValue={this.state.url}  placeholder="content url" id='url'></input>
-                <input onChange={this.handleChange} defaultValue={this.state.timestamp} placeholder="timestamp" id='time'></input>
+                <input onChange={this.handleChange} defaultValue={this.state.timestamp} placeholder="duration" disabled id='time'></input>
                 <button onClick={this.handleEventClick}>Confirm</button>
       
               </Modal.Body>
@@ -205,7 +235,7 @@ export default class EditProgramme extends Component {
         >
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <Grid container justify="space-around">
-              <KeyboardDatePicker
+              {/* <KeyboardDatePicker
                 disableToolbar
                 variant="inline"
                 format="MM/dd/yyyy"
@@ -217,7 +247,7 @@ export default class EditProgramme extends Component {
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
-              />
+              />  */}
 
               <KeyboardTimePicker
                 margin="normal"
@@ -240,7 +270,7 @@ export default class EditProgramme extends Component {
               </Modal.Header>
               <Modal.Body>
                   <input onChange={this.handleChange} defaultValue={this.state.url}  placeholder="content url" id='url'></input>
-                  <input onChange={this.handleChange} defaultValue={this.state.timestamp} placeholder="timestamp" id='time'></input>
+                  <input onChange={this.handleChange} defaultValue={this.state.timestamp} placeholder="duration" disabled id='time'></input>
                   <button onClick={this.saveEvent}>Confirm</button>
         
                 </Modal.Body>
