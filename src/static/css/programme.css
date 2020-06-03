@@ -1,3 +1,33 @@
+@media (min-width: 1200px)
+<style>
+.container, .container-lg, .container-md, .container-sm, .container-xl {
+    max-width: 1140px;
+}
+
+
+.rbc-allday-cell {
+  display: none;
+  border-top: none;
+}
+.rbc-time-view .rbc-header {
+  border-bottom: none;
+  border-top: none;
+}
+
 .calendar-background{
     background-color: #FFFFFF;
+}
+
+/* .rbc-event {
+    z-index: 999 !important;
+  } */
+
+
+/* Prevents readonly input field bug */
+#time{
+    z-index: 999999;
+}
+
+#url{
+    z-index: 999999;
 }
