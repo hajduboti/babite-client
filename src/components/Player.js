@@ -7,7 +7,6 @@ import ReactPlayer from 'react-player'
 export default class Player extends Component {
 
   state = {
-    url: this.props.url,
     playing: true,
     muted: false,
     controls: false,
@@ -18,7 +17,6 @@ export default class Player extends Component {
 
   load = url => {
     this.setState({
-      url,
       played: 0,
       loaded: 0,
       pip: false
@@ -26,7 +24,7 @@ export default class Player extends Component {
   }
 
   handleEnded = () => {
-
+    this.props.action()
     console.log('do stuff')
   }
 
@@ -35,8 +33,8 @@ export default class Player extends Component {
   }
 
   render() {
-    const { url, playing, volume } = this.state
-    console.log(url)
+    const {playing, volume } = this.state
+    const {url} = this.props
     return (
 
       <Container fluid >

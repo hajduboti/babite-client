@@ -2,7 +2,8 @@ import { FETCH_CHANNELS, CREATE_CHANNEL, GET_CHANNEL } from '../actions/types';
 
 const initialState = {
   items: [],
-  item: {}
+  item: {},
+  currentChannel: ''
 };
 
 export default function(state = initialState, action){

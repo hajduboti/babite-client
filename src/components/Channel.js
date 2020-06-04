@@ -13,11 +13,16 @@ class Channel extends Component {
       currentProgramme: "",
       currentMedia: ""
     };
+    this.getTodaysKeys = this.getTodaysKeys.bind(this)
+    this.getCurrentProgramme = this.getCurrentProgramme.bind(this)
+    this.showMedia = this.showMedia.bind(this)
+    this.nextMedia = this.nextMedia.bind(this)
   }
 
   componentDidMount(){
     const name = window.location.pathname.replace('/','');
     this.props.getChannelByName(name);
+  
   }
 
   getTodaysKeys(programmeKeys){
@@ -73,28 +78,35 @@ class Channel extends Component {
   }
 
   nextMedia(){
-    console.log('what do')
-    // this.state.currentMedia = this.state.currentProgramme[this.state.videoNumber];
+    console.log('nextMedia function called')
+    this.setState({currentMedia: this.state.currentProgramme[this.state.videoNumber]});
+    console.log("currentProgramme", this.state)
   }
 
   render() {
     const channelData = this.props.channel
     let currentVideo
-    try {
-      const programmeKeysOfDay = this.getTodaysKeys(Object.keys(channelData.programme))
-      let programmeInfo = this.getCurrentProgramme(channelData.programme, programmeKeysOfDay);
-      const currentVideoInfo = this.showMedia(channelData.programme[programmeInfo.key], programmeInfo.start)
-      this.state.videoNumber = currentVideoInfo.position
-      currentVideo = currentVideoInfo.videoSource + "?t=" + currentVideoInfo.offset
-    } catch (e) {
-      console.log("oopsie")
-    }
 
-    console.log(currentVideo)
+    if(channelData){
+      // try {
+        console.log(channelData)
+        const programmeKeysOfDay = this.getTodaysKeys(Object.keys(channelData.programme))
+        let programmeInfo = this.getCurrentProgramme(channelData.programme, programmeKeysOfDay);
+        const currentVideoInfo = this.showMedia(channelData.programme[programmeInfo.key], programmeInfo.start)
+        // this.setState({videoNumber: currentVideoInfo.position})
+        currentVideo = currentVideoInfo.videoSource + "?t=" + currentVideoInfo.offset
+  
+      // } catch (e) {
+      //   console.log(e)
+      // }
+  
+      console.log("currentVideo", currentVideo)
+    }
+    
 
     return (
       <div>
-        <Player url={currentVideo}> </Player>
+        <Player url={currentVideo} action={this.nextMedia}> </Player>
       </div>
 
 
@@ -106,8 +118,10 @@ Channel.propTypes = {
   getChannelByName: PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({
-  channel: state.channels.currentChannel
-})
+const mapStateToProps = (state) => {
+    return{
+      channel:  state.channels.currentChannel 
+    }
+}
 
  export default connect(mapStateToProps, { getChannelByName })(Channel);
