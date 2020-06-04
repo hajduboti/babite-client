@@ -12,9 +12,23 @@ export default class Player extends Component {
     muted: false,
     controls: false,
     loaded: 0,
-    volume: 0.8
+    volume: 0.8,
+    videoNumber: 0,
+    currentProgramme: "",
   }
 
+shouldComponentUpdate(nextProps, nextState){
+  if(nextProps.url !== "" && nextProps.url && this.state.url !== nextProps.url){
+    this.load(this.props.url)
+    this.setState({
+      currentProgramme: this.props.state.currentProgramme,
+      videoNumber: this.props.state.videoNumber
+    })
+    return false
+  }else{
+    return true
+  }
+}
 
   load = url => {
     this.setState({
@@ -26,8 +40,10 @@ export default class Player extends Component {
   }
 
   handleEnded = () => {
-
-    console.log('do stuff')
+    this.setState({
+      videoNumber: this.state.videoNumber + 1
+    })
+    this.load(this.state.currentProgramme[this.state.videoNumber].url)
   }
 
   ref = player => {

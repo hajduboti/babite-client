@@ -20,6 +20,26 @@ class Channel extends Component {
     this.props.getChannelByName(name);
   }
 
+  componentDidUpdate(){
+    const channelData = this.props.channel
+    let programmeInfo
+    let currentVideoInfo
+    let currentVideo
+    try {
+      const programmeKeysOfDay = this.getTodaysKeys(Object.keys(channelData.programme))
+      programmeInfo = this.getCurrentProgramme(channelData.programme, programmeKeysOfDay);
+      currentVideoInfo = this.showMedia(channelData.programme[programmeInfo.key], programmeInfo.start)
+      currentVideo = currentVideoInfo.videoSource + "?t=" + currentVideoInfo.offset
+      this.setState({
+        videoNumber : currentVideoInfo.position,
+        currentProgramme: channelData.programme[programmeInfo.key],
+        currentMedia: currentVideo
+      })
+    } catch (e) {
+      console.log("oopsie")
+    }
+  }
+
   getTodaysKeys(programmeKeys){
     let today = moment.utc().format("YYYY-MM-DD");
     let keys = [];
@@ -73,28 +93,14 @@ class Channel extends Component {
   }
 
   nextMedia(){
-    console.log('what do')
+    console.log(this.state.currentMedia)
     // this.state.currentMedia = this.state.currentProgramme[this.state.videoNumber];
   }
 
   render() {
-    const channelData = this.props.channel
-    let currentVideo
-    try {
-      const programmeKeysOfDay = this.getTodaysKeys(Object.keys(channelData.programme))
-      let programmeInfo = this.getCurrentProgramme(channelData.programme, programmeKeysOfDay);
-      const currentVideoInfo = this.showMedia(channelData.programme[programmeInfo.key], programmeInfo.start)
-      this.state.videoNumber = currentVideoInfo.position
-      currentVideo = currentVideoInfo.videoSource + "?t=" + currentVideoInfo.offset
-    } catch (e) {
-      console.log("oopsie")
-    }
-
-    console.log(currentVideo)
-
     return (
       <div>
-        <Player url={currentVideo}> </Player>
+        <Player url={this.state.currentMedia} state={this.state}  action={this.nextMedia}> </Player>
       </div>
 
 
