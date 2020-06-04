@@ -49,7 +49,6 @@ export default class EditProgramme extends Component {
 
         return(
           <Container className= "container">
-            
           {this.renderDateSelectModal()}
           {this.renderEventSelectModal()}
           <FullCalendar
@@ -59,14 +58,12 @@ export default class EditProgramme extends Component {
               center: "title",
               right: "timeGridWeek, timeGridDay"
             }}
-            // slotDuration={{
-            //   "hours": 1
-            // }}
             defaultView={'timeGridWeek'}
             plugins={[ timeGridPlugin, dayGridPlugin, interactionPlugin ]} 
             events={this.state.calendarEvents}
             dateClick={this.saveEvent}
             eventClick={this.handleEventClick}
+            eventDurationEditable={false}
             editable={true}
             selectable={true}
             allDayText={''}
@@ -76,10 +73,9 @@ export default class EditProgramme extends Component {
                   hour: '2-digit',
                   minute: '2-digit',
                   hour12:false,
-                  // hourCycle: '12'
               }
               ]}
-              eventTimeFormat= {{ // like '14:30:00'
+              eventTimeFormat= {{
               hour: '2-digit',
               minute: '2-digit',
               meridiem: false,
@@ -93,13 +89,13 @@ export default class EditProgramme extends Component {
         )
     }
 
-    handleDateClick =(arg) => {
+    createEvent =(arg) => {
       if(this.state.isNewEventModal){
         this.setState({calendarEvents: this.state.calendarEvents.concat({
           title: this.state.url,
           start: this.state.selectedDate,
           end: this.state.endDate
-        })
+        }),
       })
     }else if(this.state.isSelectedEvent){
       this.setState({calendarEvents: this.state.calendarEvents.concat({
@@ -127,50 +123,72 @@ export default class EditProgramme extends Component {
   this.setState({calendarEvents: this.state.calendarEvents.concat({
     title: newEvent.title,
     start: moment(newEvent.start).format("YYYY-MM-DD HH:mm:ss"),
+    // end: moment(newEvent.end).format("YYYY-MM-DD HH:mm:ss")
     })
   })
   }
   
-  handleEventClick = (calEvent, jsEvent, view) => {
+
+
+
+
+  handleEventClick = (calEvent) =>{    
+
+
     let calendarEvents = this.state.calendarEvents
     let currentClickedEvent = calEvent.event
     if(currentClickedEvent){
-      
+
+      // Initialise variables with start and end times of selected event
+      let startTime = moment(currentClickedEvent.start)
+      let endTime = moment(currentClickedEvent.end)
+
+      // Initialise variables with start and end times of selected event in date format
       let date = moment(currentClickedEvent.start).format("YYYY-MM-DD HH:mm:ss")
       let durationDate = moment(date).add(this.state.duration, 'seconds').format("YYYY-MM-DD HH:mm:ss");
+      
+      //Calculate the difference between the selected event times, to display in the duration box
+      let startEndTimeDifference = moment.duration(endTime.diff(startTime)).asSeconds();
 
-      this.setState({selectedDate:date, endDate:durationDate })
+      this.setState({
+        selectedDate:date, 
+        endDate:durationDate,
+        url: currentClickedEvent.title,
+        duration:startEndTimeDifference
+       })
 
+
+      // Put a check here to see if confirm is selected, otherwise this should not execute
       for(let item in calendarEvents){
         if(currentClickedEvent.title === calendarEvents[item].title && date === calendarEvents[item].start ){
           calendarEvents.splice(calendarEvents.indexOf(calendarEvents[item]), 1)
         }
       }
+    }
+      this.setState({isSelectedEvent: !this.state.isSelectedEvent}, this.createEvent())
+    }
 
-    }
-      this.setState({isSelectedEvent: !this.state.isSelectedEvent}, this.handleDateClick())
-    }
+
+
+
+
+
+
+
+
 
    saveEvent = (arg) => {
     let date = moment(arg.dateStr).format("YYYY-MM-DD HH:mm:ss")
+
     let durationDate = moment(date).add(this.state.duration, 'seconds').format("YYYY-MM-DD HH:mm:ss");
 
     this.setState({selectedDate:date, endDate:durationDate })
-    this.setState({isNewEventModal: !this.state.isNewEventModal}, this.handleDateClick())
+    this.setState({isNewEventModal: !this.state.isNewEventModal}, this.createEvent())
     }
 
     saveProgramme(){
       console.log(this.state.calendarEvents)
     }
-
-
-
-
-
-
-
-
-
 
     getYoutubeVideoDuration(videoId){
       let videoDurationSeconds
@@ -179,7 +197,7 @@ export default class EditProgramme extends Component {
         params:{
           id: videoId,
           part: 'contentDetails',
-          key:YOUTUBE_API_KEY
+          key: YOUTUBE_API_KEY
         }
       }).then(function(result){
         if(result.data.items.length !== 0){
@@ -195,39 +213,18 @@ export default class EditProgramme extends Component {
     }
 
   handleChange(event) {
-    // this.setState({url: event.target.url, duration: event.target.duration});
     if(event.target.id === 'url'){
       this.setState({url: event.target.value});
 
       let videoUrlStringified = event.target.value
 
       //ensure url entered is a valid youtube url
-      const videoId = typeof videoUrlStringified==="string" ?videoUrlStringified.split('watch?v=')[1]: ""
+      const videoId = typeof videoUrlStringified==="string" ?videoUrlStringified.split('/watch?v=')[1]: ""
       if(videoId){
         this.getYoutubeVideoDuration(videoId)
+        console.log(this.state.duration)
       }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      // this.setState({duration: videoDurationSeconds});
-
-
-    // }else if(event.target.id === 'time'){
-    //   this.setState({duration: event.target.value});
-    // }
 
   
   }
@@ -241,21 +238,7 @@ export default class EditProgramme extends Component {
       >
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <Grid container justify="space-around">
-            {/* <KeyboardDatePicker
-              disableToolbar
-              variant="inline"
-              format="MM/dd/yyyy"
-              margin="normal"
-              id="date-picker-inline"
-              label="Date picker inline"
-              value={this.state.selectedDate}
-              onChange={this.handleDateChange}
-              KeyboardButtonProps={{
-                'aria-label': 'change date',
-              }}
-            /> */}
-
-            <KeyboardTimePicker
+            {/* <KeyboardTimePicker
               margin="normal"
               id="time-picker"
               label="Time picker"
@@ -265,7 +248,7 @@ export default class EditProgramme extends Component {
               KeyboardButtonProps={{
                 'aria-label': 'change time',
               }}
-              />
+              /> */}
             </Grid>
             </MuiPickersUtilsProvider>
 
@@ -276,7 +259,8 @@ export default class EditProgramme extends Component {
             </Modal.Header>
             <Modal.Body>
                 <input onChange={this.handleChange} defaultValue={this.state.url}  placeholder="content url" id='url'></input>
-                <input onChange={this.handleChange} defaultValue={this.state.duration} placeholder="duration" disabled id='time'></input>
+                <input onChange={this.handleChange} value={this.state.duration} placeholder="duration" disabled id='time'></input>
+                {/* <button onClick={() => this.handleEventClick(true)}>Confirm</button> */}
                 <button onClick={this.handleEventClick}>Confirm</button>
       
               </Modal.Body>
@@ -300,21 +284,7 @@ export default class EditProgramme extends Component {
         >
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <Grid container justify="space-around">
-              {/* <KeyboardDatePicker
-                disableToolbar
-                variant="inline"
-                format="MM/dd/yyyy"
-                margin="normal"
-                id="date-picker-inline"
-                label="Date picker inline"
-                value={this.state.selectedDate}
-                onChange={this.handleDateChange}
-                KeyboardButtonProps={{
-                  'aria-label': 'change date',
-                }}
-              />  */}
-
-              <KeyboardTimePicker
+              {/* <KeyboardTimePicker
                 margin="normal"
                 id="time-picker"
                 label="Time picker"
@@ -324,7 +294,7 @@ export default class EditProgramme extends Component {
                 KeyboardButtonProps={{
                   'aria-label': 'change time',
                 }}
-                />
+                /> */}
               </Grid>
               </MuiPickersUtilsProvider>
 
