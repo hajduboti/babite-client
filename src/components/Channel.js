@@ -13,11 +13,33 @@ class Channel extends Component {
       currentProgramme: "",
       currentMedia: ""
     };
+
   }
 
   componentDidMount(){
     const name = window.location.pathname.replace('/','');
     this.props.getChannelByName(name);
+  }
+
+  componentDidUpdate(){
+    this.ffuckoff();
+  }
+
+  ffuckoff(){
+    const channelData = this.props.channel
+    let currentVideo
+    try {
+      const programmeKeysOfDay = this.getTodaysKeys(Object.keys(channelData.programme))
+      let programmeInfo = this.getCurrentProgramme(channelData.programme, programmeKeysOfDay);
+      const currentVideoInfo = this.showMedia(channelData.programme[programmeInfo.key], programmeInfo.start)
+      currentVideo = currentVideoInfo.videoSource + "?t=" + currentVideoInfo.offset
+      this.setState({
+        currentMedia: currentVideo
+      })
+      return 'fuckoff';
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   getTodaysKeys(programmeKeys){
@@ -63,45 +85,26 @@ class Channel extends Component {
     let programmeProgress = now-start;
     let mediaNumber = 0;
     for(const media of currentProgramme){
-      if(programmeProgress >= 0){
+      if(programmeProgress >= media.length){
         programmeProgress -= media.length
         mediaNumber++
       }else{
-        return { "videoSource": media.url, "offset": parseInt(media.length) + programmeProgress, "position": mediaNumber }
+        return { "videoSource": media.url, "offset":  programmeProgress, "position": mediaNumber }
       }
     }
   }
 
   nextMedia(){
-    console.log('what do')
-    // this.state.currentMedia = this.state.currentProgramme[this.state.videoNumber];
+    this.setState({
+           messageShown: true
+       });
   }
 
   render() {
-    const channelData = this.props.channel
-    if(channelData){
-      const programmeKeysOfDay = this.getTodaysKeys(Object.keys(channelData.programme))
-      if(programmeKeysOfDay){
-        let programmeInfo = this.getCurrentProgramme(channelData.programme, programmeKeysOfDay);
-        const currentProgrammeKey = programmeInfo.key
-        if(currentProgrammeKey){
-          this.state.currentProgramme = channelData.programme[currentProgrammeKey]
-          const currentVideoInfo = this.showMedia(this.state.currentProgramme, programmeInfo.start)
-          this.state.videoNumber = currentVideoInfo.position
-          this.state.currentMedia = currentVideoInfo.videoSource + "?t=" + currentVideoInfo.offset
-        }else{
-          this.state.currentMedia= "https://youtu.be/fx2Z5ZD_Rbo";
-        }
-      }
-    }
-
     return (
       <div>
-        <Player url={this.state.currentMedia} nextMedia={this.nextMedia}> </Player>
-
+        <Player url={this.state.currentMedia}> </Player>
       </div>
-
-
     )
   }
 }
