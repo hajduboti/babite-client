@@ -24,4 +24,5 @@ yarn-error.log*
 
 
 aws-exports.js
+youtube-exports.js
 package-lock.json

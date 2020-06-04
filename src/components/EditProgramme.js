@@ -18,6 +18,8 @@ import {
 
 import "../static/css/programme_main.css"
 import "../static/css/programme.css"
+import axios from "axios"
+import YOUTUBE_API_KEY from "../youtube-exports"
 
 
 export default class EditProgramme extends Component {
@@ -35,7 +37,7 @@ export default class EditProgramme extends Component {
       calendarWeekends: true,
       calendarEvents: [],
       url: '',
-      timestamp: '',
+      duration: 180,
       selectedDate: '',
       selectedEvent: '',
       endDate: ''
@@ -132,8 +134,10 @@ export default class EditProgramme extends Component {
     if(currentClickedEvent){
       
       let date = moment(currentClickedEvent.start).format("YYYY-MM-DD HH:mm:ss")
-      this.setState({selectedDate:date })
-      //This needs to be refactored, Christopher
+      let durationDate = moment(date).add(this.state.duration, 'seconds').format("YYYY-MM-DD HH:mm:ss");
+
+      this.setState({selectedDate:date, endDate:durationDate })
+
       for(let item in calendarEvents){
         if(currentClickedEvent.title === calendarEvents[item].title && date === calendarEvents[item].start ){
           calendarEvents.splice(calendarEvents.indexOf(calendarEvents[item]), 1)
@@ -146,7 +150,9 @@ export default class EditProgramme extends Component {
 
    saveEvent = (arg) => {
     let date = moment(arg.dateStr).format("YYYY-MM-DD HH:mm:ss")
-    this.setState({selectedDate:date})
+    let durationDate = moment(date).add(this.state.duration, 'seconds').format("YYYY-MM-DD HH:mm:ss");
+
+    this.setState({selectedDate:date, endDate:durationDate })
     this.setState({isNewEventModal: !this.state.isNewEventModal}, this.handleDateClick())
     }
 
@@ -155,13 +161,38 @@ export default class EditProgramme extends Component {
     }
 
   handleChange(event) {
-    // this.setState({url: event.target.url, timestamp: event.target.timestamp});
+    // this.setState({url: event.target.url, duration: event.target.duration});
     if(event.target.id === 'url'){
-      //Get youtube video url duration
       this.setState({url: event.target.value});
+
+
+
+      let videoUrlStringified = event.target.value.toString()
+      let videoId = videoUrlStringified.split('watch?v=')[0]
+      console.log(videoId)
+// Use this VVVVVVVVVVVV
+      // const videoId =typeof videoUrlStringified==="string" ?videoUrlStringified.split('watch?v=')[0]:""
+
+
+
+
+      (async () => {
+      const response = axios({
+        baseURL: 'https://www.googleapis.com/youtube/v3/videos',
+        params:{
+          id: videoId,
+          part: 'contentDetails',
+          key:YOUTUBE_API_KEY
+        }
+      })
+      console.log(response)
+})()
+      //Get youtube video url duration
+      //videos?id=9bZkp7q19f0&&key={YOUR_API_KEY}
+
   
     }else if(event.target.id === 'time'){
-      this.setState({timestamp: event.target.value});
+      this.setState({duration: event.target.value});
     }
 
   
@@ -211,7 +242,7 @@ export default class EditProgramme extends Component {
             </Modal.Header>
             <Modal.Body>
                 <input onChange={this.handleChange} defaultValue={this.state.url}  placeholder="content url" id='url'></input>
-                <input onChange={this.handleChange} defaultValue={this.state.timestamp} placeholder="duration" disabled id='time'></input>
+                <input onChange={this.handleChange} defaultValue={this.state.duration} placeholder="duration" disabled id='time'></input>
                 <button onClick={this.handleEventClick}>Confirm</button>
       
               </Modal.Body>
@@ -270,7 +301,7 @@ export default class EditProgramme extends Component {
               </Modal.Header>
               <Modal.Body>
                   <input onChange={this.handleChange} defaultValue={this.state.url}  placeholder="content url" id='url'></input>
-                  <input onChange={this.handleChange} defaultValue={this.state.timestamp} placeholder="duration" disabled id='time'></input>
+                  <input onChange={this.handleChange} defaultValue={this.state.duration} placeholder="duration" disabled id='time'></input>
                   <button onClick={this.saveEvent}>Confirm</button>
         
                 </Modal.Body>
