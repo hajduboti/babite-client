@@ -13,33 +13,11 @@ class Channel extends Component {
       currentProgramme: "",
       currentMedia: ""
     };
-
   }
 
   componentDidMount(){
     const name = window.location.pathname.replace('/','');
     this.props.getChannelByName(name);
-  }
-
-  componentDidUpdate(){
-    this.ffuckoff();
-  }
-
-  ffuckoff(){
-    const channelData = this.props.channel
-    let currentVideo
-    try {
-      const programmeKeysOfDay = this.getTodaysKeys(Object.keys(channelData.programme))
-      let programmeInfo = this.getCurrentProgramme(channelData.programme, programmeKeysOfDay);
-      const currentVideoInfo = this.showMedia(channelData.programme[programmeInfo.key], programmeInfo.start)
-      currentVideo = currentVideoInfo.videoSource + "?t=" + currentVideoInfo.offset
-      this.setState({
-        currentMedia: currentVideo
-      })
-      return 'fuckoff';
-    } catch (e) {
-      console.log(e)
-    }
   }
 
   getTodaysKeys(programmeKeys){
@@ -95,16 +73,31 @@ class Channel extends Component {
   }
 
   nextMedia(){
-    this.setState({
-           messageShown: true
-       });
+    console.log('what do')
+    // this.state.currentMedia = this.state.currentProgramme[this.state.videoNumber];
   }
 
   render() {
+    const channelData = this.props.channel
+    let currentVideo
+    try {
+      const programmeKeysOfDay = this.getTodaysKeys(Object.keys(channelData.programme))
+      let programmeInfo = this.getCurrentProgramme(channelData.programme, programmeKeysOfDay);
+      const currentVideoInfo = this.showMedia(channelData.programme[programmeInfo.key], programmeInfo.start)
+      this.state.videoNumber = currentVideoInfo.position
+      currentVideo = currentVideoInfo.videoSource + "?t=" + currentVideoInfo.offset
+    } catch (e) {
+      console.log("oopsie")
+    }
+
+    console.log(currentVideo)
+
     return (
       <div>
-        <Player url={this.state.currentMedia}> </Player>
+        <Player url={currentVideo}> </Player>
       </div>
+
+
     )
   }
 }

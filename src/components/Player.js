@@ -26,8 +26,8 @@ export default class Player extends Component {
   }
 
   handleEnded = () => {
-    this.load("https://youtu.be/fx2Z5ZD_Rbo")
-    console.log('1')
+
+    console.log('do stuff')
   }
 
   ref = player => {
