@@ -13,7 +13,7 @@ import "@fullcalendar/timegrid/main.css";
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
-  KeyboardDatePicker,
+  // KeyboardDatePicker,
 } from '@material-ui/pickers';
 
 import "../static/css/programme_main.css"
@@ -31,13 +31,14 @@ export default class EditProgramme extends Component {
       this.handleEventClick = this.handleEventClick.bind(this);
       this.handleEventDrag = this.handleEventDrag.bind(this);
       this.saveProgramme = this.saveProgramme.bind(this);
+      this.getYoutubeVideoDuration = this.getYoutubeVideoDuration.bind(this)
     } 
 
     state = {
       calendarWeekends: true,
       calendarEvents: [],
       url: '',
-      duration: 180,
+      duration: null,
       selectedDate: '',
       selectedEvent: '',
       endDate: ''
@@ -45,8 +46,10 @@ export default class EditProgramme extends Component {
     };    
 
     render() {
+
         return(
           <Container className= "container">
+            
           {this.renderDateSelectModal()}
           {this.renderEventSelectModal()}
           <FullCalendar
@@ -160,23 +163,17 @@ export default class EditProgramme extends Component {
       console.log(this.state.calendarEvents)
     }
 
-  handleChange(event) {
-    // this.setState({url: event.target.url, duration: event.target.duration});
-    if(event.target.id === 'url'){
-      this.setState({url: event.target.value});
-
-
-
-      let videoUrlStringified = event.target.value.toString()
-      let videoId = videoUrlStringified.split('watch?v=')[0]
-      console.log(videoId)
-// Use this VVVVVVVVVVVV
-      // const videoId =typeof videoUrlStringified==="string" ?videoUrlStringified.split('watch?v=')[0]:""
 
 
 
 
-      (async () => {
+
+
+
+
+
+    getYoutubeVideoDuration(videoId){
+      let videoDurationSeconds
       const response = axios({
         baseURL: 'https://www.googleapis.com/youtube/v3/videos',
         params:{
@@ -184,16 +181,53 @@ export default class EditProgramme extends Component {
           part: 'contentDetails',
           key:YOUTUBE_API_KEY
         }
-      })
-      console.log(response)
-})()
-      //Get youtube video url duration
-      //videos?id=9bZkp7q19f0&&key={YOUR_API_KEY}
+      }).then(function(result){
+        if(result.data.items.length !== 0){
+          let videoDuration = result.data.items[0].contentDetails.duration
+          videoDurationSeconds = moment.duration(videoDuration).asSeconds()
+          return videoDurationSeconds
+        }
 
-  
-    }else if(event.target.id === 'time'){
-      this.setState({duration: event.target.value});
+
+        
+      }).then((response)=> this.setState({duration: response}))
+
     }
+
+  handleChange(event) {
+    // this.setState({url: event.target.url, duration: event.target.duration});
+    if(event.target.id === 'url'){
+      this.setState({url: event.target.value});
+
+      let videoUrlStringified = event.target.value
+
+      //ensure url entered is a valid youtube url
+      const videoId = typeof videoUrlStringified==="string" ?videoUrlStringified.split('watch?v=')[1]: ""
+      if(videoId){
+        this.getYoutubeVideoDuration(videoId)
+      }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      // this.setState({duration: videoDurationSeconds});
+
+
+    // }else if(event.target.id === 'time'){
+    //   this.setState({duration: event.target.value});
+    // }
 
   
   }

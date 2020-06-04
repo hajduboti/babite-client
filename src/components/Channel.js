@@ -11,6 +11,21 @@ class Channel extends Component {
   }
 
   render() {
+    
+    // const channelData = this.props.channel
+    // let currentVideo
+    // try {
+      // const programmeKeysOfDay = this.getTodaysKeys(Object.keys(channelData.programme))
+      // let programmeInfo = this.getCurrentProgramme(channelData.programme, programmeKeysOfDay);
+      // const currentVideoInfo = this.showMedia(channelData.programme[programmeInfo.key], programmeInfo.start)
+      // currentVideo = currentVideoInfo.videoSource + "?t=" + currentVideoInfo.offset
+      // this.setState({
+      //   currentMedia: currentVideo
+      // })
+      // return 'fuckoff';
+    // } catch (e) {
+      // console.log(e)
+    // }
     return (
       <Player />
     )
