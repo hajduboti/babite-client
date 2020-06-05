@@ -56,6 +56,7 @@ class Channel extends Component {
     for(const element of programmeKeys) {
       const programmeStartingTime = moment(element).utc().unix()
       const programmeLength = this.getProgrammeLength(programmes[element])
+      console.log(now)
       if(now > programmeStartingTime){
         if(now > programmeStartingTime + programmeLength){
           continue;
