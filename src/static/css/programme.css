@@ -1,7 +1,20 @@
-@charset "UTF-8";
-.fc {
-  direction: ltr;
-  text-align: left;
+@media (min-width: 1200px)
+.container, .container-lg, .container-md, .container-sm, .container-xl {
+    max-width: 1140px;
+}
+
+
+.rbc-allday-cell {
+  display: none;
+  border-top: none;
+}
+.rbc-time-view .rbc-header {
+  border-bottom: none;
+  border-top: none;
+}
+
+.calendar-background{
+    background-color: #FFFFFF;
 }
 
 .fc-rtl {
