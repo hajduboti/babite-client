@@ -90,7 +90,7 @@ export default class EditProgramme extends Component {
     }
 
     createEvent =(arg) => {
-      console.log(arg)
+
       if(this.state.isNewEventModal){
         this.setState({calendarEvents: this.state.calendarEvents.concat({
           title: this.state.url,
@@ -99,6 +99,16 @@ export default class EditProgramme extends Component {
         }),
       })
     }else if(this.state.isSelectedEvent){
+
+      let calendarEvents = this.state.calendarEvents
+      let date = moment(this.state.selectedEvent.start).format("YYYY-MM-DD HH:mm:ss")
+
+      for(let item in calendarEvents){
+        if(this.state.selectedEvent.title === calendarEvents[item].title && date === calendarEvents[item].start ){
+          // do a check to see if the selected event really exists in calender, and if so, remove it
+          calendarEvents.splice(calendarEvents.indexOf(calendarEvents[item]), 1)
+        }
+      }
       this.setState({calendarEvents: this.state.calendarEvents.concat({
         title: this.state.url,
         start: this.state.selectedDate,
@@ -114,7 +124,6 @@ export default class EditProgramme extends Component {
     let oldEvent = eventDropInfo.oldEvent
     let oldEventDate = moment(oldEvent.start).format("YYYY-MM-DD HH:mm:ss")
     let newEvent = eventDropInfo.event
-    // console.log(eventDropInfo.event)
 
     for(let item in calendarEvents){
       if(oldEvent.title === calendarEvents[item].title && oldEventDate === calendarEvents[item].start ){
@@ -135,6 +144,7 @@ export default class EditProgramme extends Component {
 
   handleEventClick = (calEvent) =>{    
 
+    var calenderEventIndex
 
     let calendarEvents = this.state.calendarEvents
     let currentClickedEvent = calEvent.event
@@ -155,29 +165,25 @@ export default class EditProgramme extends Component {
         selectedDate:date, 
         endDate:durationDate,
         url: currentClickedEvent.title,
-        duration:startEndTimeDifference
+        duration:startEndTimeDifference,
+        selectedEvent: currentClickedEvent
        })
 
-       var calenderEventIndex
       // Put a check here to see if confirm is selected, otherwise this should not execute
       for(let item in calendarEvents){
         if(currentClickedEvent.title === calendarEvents[item].title && date === calendarEvents[item].start ){
-           calenderEventIndex= calendarEvents[item]
-          // calendarEvents.splice(calendarEvents.indexOf(calendarEvents[item]), 1)
+           calenderEventIndex= calendarEvents.indexOf(calendarEvents[item])
         }
       }
     }
-      this.setState({isSelectedEvent: !this.state.isSelectedEvent}, this.createEvent(calenderEventIndex))
+      if(calenderEventIndex){
+        this.setState({isSelectedEvent: !this.state.isSelectedEvent }, this.createEvent(calenderEventIndex))
+      }else{
+        this.setState({isSelectedEvent: !this.state.isSelectedEvent}, this.createEvent())
+
+      }
+     
     }
-
-
-
-
-
-
-
-
-
 
    saveEvent = (arg) => {
     let date = moment(arg.dateStr).format("YYYY-MM-DD HH:mm:ss")
@@ -224,7 +230,7 @@ export default class EditProgramme extends Component {
       const videoId = typeof videoUrlStringified==="string" ?videoUrlStringified.split('/watch?v=')[1]: ""
       if(videoId){
         this.getYoutubeVideoDuration(videoId)
-        console.log(this.state.duration)
+        // console.log(this.state.duration)
       }
     }
 
