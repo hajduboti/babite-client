@@ -12,23 +12,20 @@ export default class Player extends Component {
     muted: false,
     controls: false,
     loaded: 0,
-    volume: 0.1,
+    volume: 0.3,
     videoNumber: 0,
-    currentProgramme: "",
+    currentProgramme: 0,
   }
 
-shouldComponentUpdate(nextProps, nextState){
-  if(nextProps.url !== "" && nextProps.url && this.state.url !== nextProps.url){
-    this.load(this.props.url)
-    this.setState({
-      currentProgramme: this.props.state.currentProgramme,
-      videoNumber: this.props.state.videoNumber
-    })
-    return false
-  }else{
-    return true
+  componentDidUpdate(){
+    if(this.state.currentProgramme !== this.props.state.currentProgramme){
+      this.setState({
+        currentProgramme: this.props.state.currentProgramme,
+        videoNumber: this.props.state.videoNumber
+      })
+      this.load(this.props.url)
+    }
   }
-}
 
   load = url => {
     this.setState({
@@ -40,10 +37,19 @@ shouldComponentUpdate(nextProps, nextState){
   }
 
   handleEnded = () => {
+    const newIndex = this.state.videoNumber + 1
     this.setState({
-      videoNumber: this.state.videoNumber + 1
+      videoNumber: newIndex
     })
-    this.load(this.state.currentProgramme[this.state.videoNumber].url)
+    if(this.state.videoNumber === newIndex){
+      const newUrl = this.state.currentProgramme[newIndex].url
+      console.log(newIndex)
+      this.load(newUrl)
+    }
+  }
+
+  handlePlayPause = () => {
+    this.setState({ playing: !this.state.playing })
   }
 
   ref = player => {
@@ -54,8 +60,8 @@ shouldComponentUpdate(nextProps, nextState){
     const { url, playing, volume } = this.state
     return (
 
-      <Container fluid >
-        <Row className="player-row">
+      <Container  className="root-container" fluid>
+        <Row className="player-row py-6">
           <Col xs={{ span: 8, offset: 2 }} className="player-container">
             <ReactPlayer width="100%" height="100%"
               ref={this.ref}
@@ -63,8 +69,12 @@ shouldComponentUpdate(nextProps, nextState){
               volume={volume}
               playing={playing}
               onEnded={this.handleEnded}
+              style={{ pointerEvents: 'none' }}
               />
+            <button><img src="https://cdn.discordapp.com/attachments/393128959312789505/718423333867094076/danny-devito-face-png-4.png"  width="90" alt="my image" onClick={this.handlePlayPause} /></button>
+
           </Col>
+
         </Row>
       </Container>
 
