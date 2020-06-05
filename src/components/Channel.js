@@ -36,7 +36,7 @@ class Channel extends Component {
         currentMedia: currentVideo
       })
     } catch (e) {
-      console.log("oopsie")
+      console.warn("This is fine :)")
     }
   }
 

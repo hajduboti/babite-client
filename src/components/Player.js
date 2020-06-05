@@ -12,7 +12,7 @@ export default class Player extends Component {
     muted: false,
     controls: false,
     loaded: 0,
-    volume: 0.8,
+    volume: 0.1,
     videoNumber: 0,
     currentProgramme: "",
   }
@@ -52,7 +52,6 @@ shouldComponentUpdate(nextProps, nextState){
 
   render() {
     const { url, playing, volume } = this.state
-    console.log(url)
     return (
 
       <Container fluid >
