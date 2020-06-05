@@ -145,9 +145,8 @@ export default class EditProgramme extends Component {
   handleEventClick = (calEvent) =>{    
 
     var calenderEventIndex
-
-    let calendarEvents = this.state.calendarEvents
     let currentClickedEvent = calEvent.event
+    
     if(currentClickedEvent){
 
       // Initialise variables with start and end times of selected event
@@ -169,19 +168,8 @@ export default class EditProgramme extends Component {
         selectedEvent: currentClickedEvent
        })
 
-      // Put a check here to see if confirm is selected, otherwise this should not execute
-      for(let item in calendarEvents){
-        if(currentClickedEvent.title === calendarEvents[item].title && date === calendarEvents[item].start ){
-           calenderEventIndex= calendarEvents.indexOf(calendarEvents[item])
-        }
-      }
     }
-      if(calenderEventIndex){
-        this.setState({isSelectedEvent: !this.state.isSelectedEvent }, this.createEvent(calenderEventIndex))
-      }else{
         this.setState({isSelectedEvent: !this.state.isSelectedEvent}, this.createEvent())
-
-      }
      
     }
 
