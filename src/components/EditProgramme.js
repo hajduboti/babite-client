@@ -90,6 +90,7 @@ export default class EditProgramme extends Component {
     }
 
     createEvent =(arg) => {
+      console.log(arg)
       if(this.state.isNewEventModal){
         this.setState({calendarEvents: this.state.calendarEvents.concat({
           title: this.state.url,
@@ -157,15 +158,16 @@ export default class EditProgramme extends Component {
         duration:startEndTimeDifference
        })
 
-
+       var calenderEventIndex
       // Put a check here to see if confirm is selected, otherwise this should not execute
       for(let item in calendarEvents){
         if(currentClickedEvent.title === calendarEvents[item].title && date === calendarEvents[item].start ){
-          calendarEvents.splice(calendarEvents.indexOf(calendarEvents[item]), 1)
+           calenderEventIndex= calendarEvents[item]
+          // calendarEvents.splice(calendarEvents.indexOf(calendarEvents[item]), 1)
         }
       }
     }
-      this.setState({isSelectedEvent: !this.state.isSelectedEvent}, this.createEvent())
+      this.setState({isSelectedEvent: !this.state.isSelectedEvent}, this.createEvent(calenderEventIndex))
     }
 
 
