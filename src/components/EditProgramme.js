@@ -4,18 +4,10 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
-import Grid from '@material-ui/core/Grid';
-import DateFnsUtils from '@date-io/date-fns';
 import moment from 'moment'
 import "@fullcalendar/core/main.css";
 import "@fullcalendar/daygrid/main.css";
 import "@fullcalendar/timegrid/main.css";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  // KeyboardDatePicker,
-} from '@material-ui/pickers';
-
 import "../static/css/programme_main.css"
 import "../static/css/programme.css"
 import axios from "axios"
@@ -38,12 +30,15 @@ export default class EditProgramme extends Component {
       calendarWeekends: true,
       calendarEvents: [],
       url: '',
-      duration: null,
+      duration: '',
       selectedDate: '',
       selectedEvent: '',
-      endDate: ''
+      endDate: '',
+      isNewEventModal: false,
+      isSelectedEvent: false
 
     };    
+
 
     render() {
 
@@ -91,12 +86,13 @@ export default class EditProgramme extends Component {
     }
 
     createEvent =() => {
-
+      //we set the enddate here because otherwise this.state.duration is not updated from the modal input value
       if(this.state.isNewEventModal){
         this.setState({calendarEvents: this.state.calendarEvents.concat({
           title: this.state.url,
           start: this.state.selectedDate,
-          end: this.state.endDate
+          end: moment.utc(this.state.selectedDate).add(this.state.duration, 'seconds').format("YYYY-MM-DD HH:mm:ss")
+
         })
       }, this.setState({isNewEventModal: false}))
     }else if(this.state.isSelectedEvent){
@@ -134,7 +130,8 @@ export default class EditProgramme extends Component {
     this.setState({calendarEvents: this.state.calendarEvents.concat({
       title: newEvent.title,
       start: moment.utc(newEvent.start).format("YYYY-MM-DD HH:mm:ss"),
-      // end: moment(newEvent.end).format("YYYY-MM-DD HH:mm:ss")
+      //fix end logic
+      // end: moment(oldEvent.end).format("YYYY-MM-DD HH:mm:ss")
       })
     })
     }
@@ -171,20 +168,13 @@ export default class EditProgramme extends Component {
     }
 
     handleDateClick = (arg) =>{
-      // this.setState({isNewEventModal: !this.state.isNewEventModal}, this.createEvent())
       this.setState({isNewEventModal: !this.state.isNewEventModal}, this.saveEvent(arg))
     
     }
 
    saveEvent = (arg) => {
     let date = moment.utc(arg.dateStr).format("YYYY-MM-DD HH:mm:ss")
-    console.log(this.state.duration)
-// Here lies the issue of why enddate is always fucked. Fix async bullshit
-    let durationDate = moment.utc(date).add(this.state.duration, 'seconds').format("YYYY-MM-DD HH:mm:ss");
-    console.log("durationdate", durationDate)
-
-    this.setState({selectedDate:date, endDate:durationDate }, this.createEvent())
-    console.log("before createEvent", this.state.endDate)
+    this.setState({selectedDate:date}, this.createEvent())
     
     }
 
@@ -194,7 +184,7 @@ export default class EditProgramme extends Component {
 
     getYoutubeVideoDuration(videoId){
       let videoDurationSeconds
-      const response = axios({
+      axios({
         baseURL: 'https://www.googleapis.com/youtube/v3/videos',
         params:{
           id: videoId,
@@ -223,13 +213,12 @@ export default class EditProgramme extends Component {
       let videoUrlStringified = event.target.value
 
       //ensure url entered is a valid youtube url
+      //TODO: fix this regex expression
       const videoId = typeof videoUrlStringified==="string" ?videoUrlStringified.split('/watch?v=')[1]: ""
       if(videoId){
         this.getYoutubeVideoDuration(videoId)
-        // console.log(this.state.duration)
       }
     }
-
   
   }
   renderEventSelectModal = (event) => {
@@ -240,22 +229,6 @@ export default class EditProgramme extends Component {
         onHide={() => this.setState({isSelectedEvent: false})}
         aria-labelledby="ModalHeader"
       >
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <Grid container justify="space-around">
-            {/* <KeyboardTimePicker
-              margin="normal"
-              id="time-picker"
-              label="Time picker"
-              ampm={false}
-              value={this.state.selectedDate}
-              onChange={this.handleDateChange}
-              KeyboardButtonProps={{
-                'aria-label': 'change time',
-              }}
-              /> */}
-            </Grid>
-            </MuiPickersUtilsProvider>
-
               <Modal.Header closeButton>
               <Modal.Title id="example-custom-modal-styling-title">
                 Edit a Programme
@@ -286,21 +259,6 @@ export default class EditProgramme extends Component {
           onHide={() => this.setState({isNewEventModal: false})}
           aria-labelledby="ModalHeader"
         >
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Grid container justify="space-around">
-              {/* <KeyboardTimePicker
-                margin="normal"
-                id="time-picker"
-                label="Time picker"
-                ampm={false}
-                value={this.state.selectedDate}
-                onChange={this.handleDateChange}
-                KeyboardButtonProps={{
-                  'aria-label': 'change time',
-                }}
-                /> */}
-              </Grid>
-              </MuiPickersUtilsProvider>
 
                 <Modal.Header closeButton>
                 <Modal.Title id="example-custom-modal-styling-title">
@@ -311,8 +269,8 @@ export default class EditProgramme extends Component {
                   <input onChange={this.handleChange} defaultValue={this.state.url}  placeholder="content url" id='url'></input>
                   <input onChange={this.handleChange} value={this.state.duration}  disabled id='time'></input>
                   {/* disable button if above inputs are not valid */}
-                  <button onClick={this.createEvent}>Confirm</button>
-        
+                  {/* <button onClick={this.createEvent}>Confirm</button> */}
+                  <button onClick={() => this.createEvent(this.state.duration)}>Confirm</button>
                 </Modal.Body>
               </Modal>
        )
