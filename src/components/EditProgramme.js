@@ -4,18 +4,10 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
-import Grid from '@material-ui/core/Grid';
-import DateFnsUtils from '@date-io/date-fns';
 import moment from 'moment'
 import "@fullcalendar/core/main.css";
 import "@fullcalendar/daygrid/main.css";
 import "@fullcalendar/timegrid/main.css";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  // KeyboardDatePicker,
-} from '@material-ui/pickers';
-
 import "../static/css/programme_main.css"
 import "../static/css/programme.css"
 import axios from "axios"
@@ -38,12 +30,15 @@ export default class EditProgramme extends Component {
       calendarWeekends: true,
       calendarEvents: [],
       url: '',
-      duration: null,
+      duration: '',
       selectedDate: '',
       selectedEvent: '',
-      endDate: ''
+      endDate: '',
+      isNewEventModal: false,
+      isSelectedEvent: false
 
     };    
+
 
     render() {
 
@@ -61,11 +56,12 @@ export default class EditProgramme extends Component {
             defaultView={'timeGridWeek'}
             plugins={[ timeGridPlugin, dayGridPlugin, interactionPlugin ]} 
             events={this.state.calendarEvents}
-            dateClick={this.saveEvent}
+            dateClick={this.handleDateClick}
             eventClick={this.handleEventClick}
             eventDurationEditable={false}
             editable={true}
             selectable={true}
+            timeZone={'utc'}
             allDayText={''}
             slotDuration={'00:30:00'}
             slotLabelFormat={[
@@ -89,19 +85,20 @@ export default class EditProgramme extends Component {
         )
     }
 
-    createEvent =(arg) => {
-
+    createEvent =() => {
+      //we set the enddate here because otherwise this.state.duration is not updated from the modal input value
       if(this.state.isNewEventModal){
         this.setState({calendarEvents: this.state.calendarEvents.concat({
           title: this.state.url,
           start: this.state.selectedDate,
-          end: this.state.endDate
-        }),
-      })
+          end: moment.utc(this.state.selectedDate).add(this.state.duration, 'seconds').format("YYYY-MM-DD HH:mm:ss")
+
+        })
+      }, this.setState({isNewEventModal: false}))
     }else if(this.state.isSelectedEvent){
 
       let calendarEvents = this.state.calendarEvents
-      let date = moment(this.state.selectedEvent.start).format("YYYY-MM-DD HH:mm:ss")
+      let date = moment.utc(this.state.selectedEvent.start).format("YYYY-MM-DD HH:mm:ss")
 
       for(let item in calendarEvents){
         if(this.state.selectedEvent.title === calendarEvents[item].title && date === calendarEvents[item].start ){
@@ -119,67 +116,66 @@ export default class EditProgramme extends Component {
   }
   };
 
-  handleEventDrag = (eventDropInfo ) => {
-    let calendarEvents = this.state.calendarEvents
-    let oldEvent = eventDropInfo.oldEvent
-    let oldEventDate = moment(oldEvent.start).format("YYYY-MM-DD HH:mm:ss")
-    let newEvent = eventDropInfo.event
+    handleEventDrag = (eventDropInfo ) => {
+      let calendarEvents = this.state.calendarEvents
+      let oldEvent = eventDropInfo.oldEvent
+      let oldEventDate = moment.utc(oldEvent.start).format("YYYY-MM-DD HH:mm:ss")
+      let newEvent = eventDropInfo.event
 
-    for(let item in calendarEvents){
-      if(oldEvent.title === calendarEvents[item].title && oldEventDate === calendarEvents[item].start ){
-        calendarEvents.splice(calendarEvents.indexOf(calendarEvents[item]), 1)
-      }
-  }
-  this.setState({calendarEvents: this.state.calendarEvents.concat({
-    title: newEvent.title,
-    start: moment(newEvent.start).format("YYYY-MM-DD HH:mm:ss"),
-    // end: moment(newEvent.end).format("YYYY-MM-DD HH:mm:ss")
+      for(let item in calendarEvents){
+        if(oldEvent.title === calendarEvents[item].title && oldEventDate === calendarEvents[item].start ){
+          calendarEvents.splice(calendarEvents.indexOf(calendarEvents[item]), 1)
+        }
+    }
+    this.setState({calendarEvents: this.state.calendarEvents.concat({
+      title: newEvent.title,
+      start: moment.utc(newEvent.start).format("YYYY-MM-DD HH:mm:ss"),
+      //fix end logic
+      // end: moment(oldEvent.end).format("YYYY-MM-DD HH:mm:ss")
+      })
     })
-  })
-  }
+    }
   
 
+    handleEventClick = (calEvent) =>{    
 
-
-
-  handleEventClick = (calEvent) =>{    
-
-    var calenderEventIndex
-    let currentClickedEvent = calEvent.event
-    
-    if(currentClickedEvent){
-
-      // Initialise variables with start and end times of selected event
-      let startTime = moment(currentClickedEvent.start)
-      let endTime = moment(currentClickedEvent.end)
-
-      // Initialise variables with start and end times of selected event in date format
-      let date = moment(currentClickedEvent.start).format("YYYY-MM-DD HH:mm:ss")
-      let durationDate = moment(date).add(this.state.duration, 'seconds').format("YYYY-MM-DD HH:mm:ss");
+      let currentClickedEvent = calEvent.event
       
-      //Calculate the difference between the selected event times, to display in the duration box
-      let startEndTimeDifference = moment.duration(endTime.diff(startTime)).asSeconds();
+      if(currentClickedEvent){
 
-      this.setState({
-        selectedDate:date, 
-        endDate:durationDate,
-        url: currentClickedEvent.title,
-        duration:startEndTimeDifference,
-        selectedEvent: currentClickedEvent
-       })
+        // Initialise variables with start and end times of selected event
+        let startTime = moment.utc(currentClickedEvent.start)
+        let endTime = moment.utc(currentClickedEvent.end)
 
+        // Initialise variables with start and end times of selected event in date format
+        let date = moment.utc(currentClickedEvent.start).format("YYYY-MM-DD HH:mm:ss")
+        let durationDate = moment.utc(date).add(this.state.duration, 'seconds').format("YYYY-MM-DD HH:mm:ss");
+        
+        //Calculate the difference between the selected event times, to display in the duration box
+        let startEndTimeDifference = moment.duration(endTime.diff(startTime)).asSeconds();
+
+        this.setState({
+          selectedDate:date, 
+          endDate:durationDate,
+          url: currentClickedEvent.title,
+          duration:startEndTimeDifference,
+          selectedEvent: currentClickedEvent
+        })
+
+      }
+          this.setState({isSelectedEvent: !this.state.isSelectedEvent}, this.createEvent())
+      
     }
-        this.setState({isSelectedEvent: !this.state.isSelectedEvent}, this.createEvent())
-     
+
+    handleDateClick = (arg) =>{
+      this.setState({isNewEventModal: !this.state.isNewEventModal}, this.saveEvent(arg))
+    
     }
 
    saveEvent = (arg) => {
-    let date = moment(arg.dateStr).format("YYYY-MM-DD HH:mm:ss")
-
-    let durationDate = moment(date).add(this.state.duration, 'seconds').format("YYYY-MM-DD HH:mm:ss");
-
-    this.setState({selectedDate:date, endDate:durationDate })
-    this.setState({isNewEventModal: !this.state.isNewEventModal}, this.createEvent())
+    let date = moment.utc(arg.dateStr).format("YYYY-MM-DD HH:mm:ss")
+    this.setState({selectedDate:date}, this.createEvent())
+    
     }
 
     saveProgramme(){
@@ -188,21 +184,23 @@ export default class EditProgramme extends Component {
 
     getYoutubeVideoDuration(videoId){
       let videoDurationSeconds
-      const response = axios({
+      axios({
         baseURL: 'https://www.googleapis.com/youtube/v3/videos',
         params:{
           id: videoId,
           part: 'contentDetails',
           key: YOUTUBE_API_KEY
         }
-      }).then(function(result){
-        if(result.data.items.length !== 0){
+      // }).then(function(result){
+      }).then((result) => {
+
+      if(result.data.items.length !== 0){
           let videoDuration = result.data.items[0].contentDetails.duration
           videoDurationSeconds = moment.duration(videoDuration).asSeconds()
           return videoDurationSeconds
+        }else{
+          return "url is invalid"
         }
-
-
         
       }).then((response)=> this.setState({duration: response}))
 
@@ -215,13 +213,12 @@ export default class EditProgramme extends Component {
       let videoUrlStringified = event.target.value
 
       //ensure url entered is a valid youtube url
+      //TODO: fix this regex expression
       const videoId = typeof videoUrlStringified==="string" ?videoUrlStringified.split('/watch?v=')[1]: ""
       if(videoId){
         this.getYoutubeVideoDuration(videoId)
-        // console.log(this.state.duration)
       }
     }
-
   
   }
   renderEventSelectModal = (event) => {
@@ -232,25 +229,9 @@ export default class EditProgramme extends Component {
         onHide={() => this.setState({isSelectedEvent: false})}
         aria-labelledby="ModalHeader"
       >
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <Grid container justify="space-around">
-            {/* <KeyboardTimePicker
-              margin="normal"
-              id="time-picker"
-              label="Time picker"
-              ampm={false}
-              value={this.state.selectedDate}
-              onChange={this.handleDateChange}
-              KeyboardButtonProps={{
-                'aria-label': 'change time',
-              }}
-              /> */}
-            </Grid>
-            </MuiPickersUtilsProvider>
-
               <Modal.Header closeButton>
               <Modal.Title id="example-custom-modal-styling-title">
-                Edit Content
+                Edit a Programme
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -265,7 +246,7 @@ export default class EditProgramme extends Component {
   }
 
   handleDateChange = (date) => {
-    date = moment(date).format("YYYY-MM-DD HH:mm:ss")
+    date = moment.utc(date).format("YYYY-MM-DD HH:mm:ss")
     this.setState({selectedDate: date});
   };
 
@@ -278,32 +259,18 @@ export default class EditProgramme extends Component {
           onHide={() => this.setState({isNewEventModal: false})}
           aria-labelledby="ModalHeader"
         >
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Grid container justify="space-around">
-              {/* <KeyboardTimePicker
-                margin="normal"
-                id="time-picker"
-                label="Time picker"
-                ampm={false}
-                value={this.state.selectedDate}
-                onChange={this.handleDateChange}
-                KeyboardButtonProps={{
-                  'aria-label': 'change time',
-                }}
-                /> */}
-              </Grid>
-              </MuiPickersUtilsProvider>
 
                 <Modal.Header closeButton>
                 <Modal.Title id="example-custom-modal-styling-title">
-                  Enter Content
+                  Create a new programme
                 </Modal.Title>
               </Modal.Header>
               <Modal.Body>
                   <input onChange={this.handleChange} defaultValue={this.state.url}  placeholder="content url" id='url'></input>
-                  <input onChange={this.handleChange} defaultValue={this.state.duration} placeholder="duration" disabled id='time'></input>
-                  <button onClick={this.saveEvent}>Confirm</button>
-        
+                  <input onChange={this.handleChange} value={this.state.duration}  disabled id='time'></input>
+                  {/* disable button if above inputs are not valid */}
+                  {/* <button onClick={this.createEvent}>Confirm</button> */}
+                  <button onClick={() => this.createEvent(this.state.duration)}>Confirm</button>
                 </Modal.Body>
               </Modal>
        )
