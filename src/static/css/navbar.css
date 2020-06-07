@@ -14,3 +14,11 @@
     border: none !important;
 
 }
+
+.nav-link img{
+ max-width: none !important;
+}
+
+.profile-button{
+    max-width: none !important;
+}

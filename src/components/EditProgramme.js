@@ -29,13 +29,17 @@ export default class EditProgramme extends Component {
     state = {
       calendarWeekends: true,
       calendarEvents: [],
-      url: '',
-      duration: '',
+      // url: '',
+      // duration: '',
       selectedDate: '',
       selectedEvent: '',
       endDate: '',
       isNewEventModal: false,
-      isSelectedEvent: false
+      isSelectedEvent: false,
+      url: [],
+      duration: [],
+      videos: [],
+      inputs: ['input-0']
 
     };    
 
@@ -182,8 +186,11 @@ export default class EditProgramme extends Component {
       console.log(this.state.calendarEvents)
     }
 
-    getYoutubeVideoDuration(videoId){
+    getYoutubeVideoDuration(videoId, url){
       let videoDurationSeconds
+      const videos = [...this.state.videos]
+      var i = videos.length
+      var url = url
       axios({
         baseURL: 'https://www.googleapis.com/youtube/v3/videos',
         params:{
@@ -193,7 +200,6 @@ export default class EditProgramme extends Component {
         }
       // }).then(function(result){
       }).then((result) => {
-
       if(result.data.items.length !== 0){
           let videoDuration = result.data.items[0].contentDetails.duration
           videoDurationSeconds = moment.duration(videoDuration).asSeconds()
@@ -201,26 +207,24 @@ export default class EditProgramme extends Component {
         }else{
           return "url is invalid"
         }
-        
-      }).then((response)=> this.setState({duration: response}))
+
+      }).then((response)=> 
+
+      this.setState({duration: response},() =>
+        // console.log(url),
+        videos[i] = {...videos[i], [url]: response},
+        // console.log(videos),
+    
+        // this.setState({ videos }, ()=> console.log(this.state.videos)),
+        this.setState({ videos }),
+    )
+      // })
+      )
+      
 
     }
 
-  handleChange(event) {
-    if(event.target.id === 'url'){
-      this.setState({url: event.target.value});
 
-      let videoUrlStringified = event.target.value
-
-      //ensure url entered is a valid youtube url
-      //TODO: fix this regex expression
-      const videoId = typeof videoUrlStringified==="string" ?videoUrlStringified.split('/watch?v=')[1]: ""
-      if(videoId){
-        this.getYoutubeVideoDuration(videoId)
-      }
-    }
-  
-  }
   renderEventSelectModal = (event) => {
     return(
       <Modal data-backdrop="false"
@@ -250,8 +254,41 @@ export default class EditProgramme extends Component {
     this.setState({selectedDate: date});
   };
 
-  renderDateSelectModal = () => {
+  appendInput() {
+    var newInput = `input-${this.state.inputs.length}`;
+    var newUrl = this.state.url.length;
+    var newDuration = this.state.duration.length;
+    this.setState(prevState => ({ inputs: prevState.inputs.concat([newInput])}));
+    // this.setState(prevState => ({ inputs: prevState.inputs.concat([newInput]), videos: [...prevState.videos, { url: "", duration: "" }] }));
 
+}
+
+handleChange(event, i) {
+
+    let url = [...this.state.url];
+    url[event.target.id] = event.target.value
+    // videos[i] = {...videos[i]};
+    // console.log(videos)
+
+    this.setState({ url });
+
+
+    let videoUrlStringified = event.target.value
+
+    //ensure url entered is a valid youtube url
+    //TODO: fix this regex expression
+    const videoId = typeof videoUrlStringified==="string" ?videoUrlStringified.split('/watch?v=')[1]: ""
+    if(videoId){
+      this.getYoutubeVideoDuration(videoId, event.target.value)
+
+    }
+  
+
+}
+  renderDateSelectModal = () => {
+    console.log(this.state.url)
+    console.log(this.state.videos[0])
+    
       return(
         <Modal data-backdrop="false"
           keyboard
@@ -266,12 +303,22 @@ export default class EditProgramme extends Component {
                 </Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                  <input onChange={this.handleChange} defaultValue={this.state.url}  placeholder="content url" id='url'></input>
-                  <input onChange={this.handleChange} value={this.state.duration}  disabled id='time'></input>
+              <div id="dynamicInput">
+                       {this.state.inputs.map((input, i) => 
+                       <div key={input}>
+                        <input id={`${input}-url`} onChange={this.handleChange} defaultValue={this.state.url}  placeholder="content url"></input>
+                        <input id={`${input}-duration`} onChange={this.handleChange} value={this.state.videos[i]} placeholder="duration" disabled></input>
+                       </div> )}
+              </div>
+                  {/* <input onChange={this.handleChange} defaultValue={this.state.url}  placeholder="content url" id='url'></input>
+                  <input onChange={this.handleChange} value={this.state.duration} placeholder="duration" disabled id='time'></input> */}
                   {/* disable button if above inputs are not valid */}
                   {/* <button onClick={this.createEvent}>Confirm</button> */}
                   <button onClick={() => this.createEvent(this.state.duration)}>Confirm</button>
                 </Modal.Body>
+                <button onClick={ () => this.appendInput() }>
+                   CLICK ME TO ADD AN INPUT
+               </button>
               </Modal>
        )
   }
