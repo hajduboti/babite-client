@@ -286,7 +286,7 @@ handleChange(event, i) {
 
 }
   renderDateSelectModal = () => {
-    console.log(this.state.url)
+    // console.log(this.state.url)
     console.log(this.state.videos[0])
     
       return(
@@ -306,6 +306,7 @@ handleChange(event, i) {
               <div id="dynamicInput">
                        {this.state.inputs.map((input, i) => 
                        <div key={input}>
+                         {/* https://itnext.io/building-a-dynamic-controlled-form-in-react-together-794a44ee552c */}
                         <input id={`${input}-url`} onChange={this.handleChange} defaultValue={this.state.url}  placeholder="content url"></input>
                         <input id={`${input}-duration`} onChange={this.handleChange} value={this.state.videos[i]} placeholder="duration" disabled></input>
                        </div> )}
