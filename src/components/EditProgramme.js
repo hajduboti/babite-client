@@ -187,10 +187,13 @@ export default class EditProgramme extends Component {
     }
 
     getYoutubeVideoDuration(videoId, url){
+      //Declare variables here to be used in the callback
       let videoDurationSeconds
       const videos = [...this.state.videos]
       var i = videos.length
       var url = url
+
+      //Make youtube api request to get video details
       axios({
         baseURL: 'https://www.googleapis.com/youtube/v3/videos',
         params:{
@@ -198,7 +201,7 @@ export default class EditProgramme extends Component {
           part: 'contentDetails',
           key: YOUTUBE_API_KEY
         }
-      // }).then(function(result){
+        //convert video duration to seconds, if valid
       }).then((result) => {
       if(result.data.items.length !== 0){
           let videoDuration = result.data.items[0].contentDetails.duration
@@ -207,21 +210,16 @@ export default class EditProgramme extends Component {
         }else{
           return "url is invalid"
         }
-
+        //callback to update object with new url and duration of video
       }).then((response)=> 
 
-      this.setState({duration: response},() =>
-        // console.log(url),
+      this.setState(prevState => ({ 
+        duration: prevState.duration.concat([response])}), () =>
         videos[i] = {...videos[i], [url]: response},
-        // console.log(videos),
-    
-        // this.setState({ videos }, ()=> console.log(this.state.videos)),
         this.setState({ videos }),
     )
-      // })
       )
-      
-
+    
     }
 
 
@@ -256,43 +254,38 @@ export default class EditProgramme extends Component {
 
   appendInput() {
     var newInput = `input-${this.state.inputs.length}`;
-    var newUrl = this.state.url.length;
-    var newDuration = this.state.duration.length;
     this.setState(prevState => ({ inputs: prevState.inputs.concat([newInput])}));
-    // this.setState(prevState => ({ inputs: prevState.inputs.concat([newInput]), videos: [...prevState.videos, { url: "", duration: "" }] }));
-
 }
 
 handleChange(event, i) {
 
     let url = [...this.state.url];
+    var array = [...this.state.duration]
+
+    // Contains an object mapping of the dynamic input field with the video link
+    // [input-0-url: "https://www.youtube.com/watch?v=3YFeE1eDlD0"]
     url[event.target.id] = event.target.value
-    // videos[i] = {...videos[i]};
-    // console.log(videos)
 
-    this.setState({ url });
+    // We get the value from the input field id from above (0, 1 ,2, etc.) and remove it from the array of durations if the url is removed
+    let stringToGet = event.target.id.toString()
+    var integer = parseInt(stringToGet.replace(/[^0-9\.]/g, ''), 10);
 
+    if(event.target.value == null || event.target.value == ""){
+      array.splice(integer, 1)
+    }
 
+    //update state of url objects and duration array
+    this.setState({ url },
+      this.setState({duration: array}));
+    
+    //calculate duration of youtube video
     let videoUrlStringified = event.target.value
-
-    //ensure url entered is a valid youtube url
-    //TODO: fix this regex expression
     const videoId = typeof videoUrlStringified==="string" ?videoUrlStringified.split('/watch?v=')[1]: ""
     if(videoId){
       this.getYoutubeVideoDuration(videoId, event.target.value)
-
-    }
-  
-
+    }  
 }
   renderDateSelectModal = () => {
-    // console.log(this.state.url)
-    console.log(this.state.videos)
-    // console.log(Object.values(this.state.videos))
-    if(this.state.videos[0]){
-      console.log(Object.values(this.state.videos[0]))
-
-    }
       return(
         <Modal data-backdrop="false"
           keyboard
@@ -312,13 +305,13 @@ handleChange(event, i) {
                        <div key={input}>
                          {/* https://itnext.io/building-a-dynamic-controlled-form-in-react-together-794a44ee552c */}
                         <input id={`${input}-url`} onChange={this.handleChange} defaultValue={this.state.url}  placeholder="content url"></input>
-                        <input id={`${input}-duration`} onChange={this.handleChange} value={this.state.videos} placeholder="duration" disabled></input>
+
+                        {this.state.duration[i] ?                         
+                        <input id={`${input}-duration`} value={this.state.duration[i]} placeholder="duration" disabled></input> : 
+                        <input id={`${input}-duration`} value={0} placeholder="duration" disabled></input>
+                      }
                        </div> )}
               </div>
-                  {/* <input onChange={this.handleChange} defaultValue={this.state.url}  placeholder="content url" id='url'></input>
-                  <input onChange={this.handleChange} value={this.state.duration} placeholder="duration" disabled id='time'></input> */}
-                  {/* disable button if above inputs are not valid */}
-                  {/* <button onClick={this.createEvent}>Confirm</button> */}
                   <button onClick={() => this.createEvent(this.state.duration)}>Confirm</button>
                 </Modal.Body>
                 <button onClick={ () => this.appendInput() }>
