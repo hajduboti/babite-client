@@ -14,6 +14,17 @@ import axios from "axios"
 import YOUTUBE_API_KEY from "../youtube-exports"
 
 
+// Custom state object to reset state upon confirmation selection. No way to do this in React by default 
+const initialState = {
+
+    url: {},
+    duration: [],
+    videos: [],
+    //define with init value to render initial input field
+    inputs: ['input-0']
+  
+}
+
 export default class EditProgramme extends Component {
   calendarRef = React.createRef()
     constructor(props){  
@@ -26,19 +37,21 @@ export default class EditProgramme extends Component {
       this.getYoutubeVideoDuration = this.getYoutubeVideoDuration.bind(this)
     } 
 
+
     state = {
       calendarWeekends: true,
       calendarEvents: [],
-      // url: '',
-      // duration: '',
-      selectedDate: '',
+      // selectedDate: '',
+      selectedDate: [],
       selectedEvent: '',
-      endDate: '',
+      // endDate: '',
+      endDate: {},
       isNewEventModal: false,
       isSelectedEvent: false,
-      url: [],
+      url: {},
       duration: [],
       videos: [],
+      //define with init value to render initial input field
       inputs: ['input-0']
 
     };    
@@ -61,9 +74,15 @@ export default class EditProgramme extends Component {
             plugins={[ timeGridPlugin, dayGridPlugin, interactionPlugin ]} 
             events={this.state.calendarEvents}
             dateClick={this.handleDateClick}
-            eventClick={this.handleEventClick}
+           
+            //temp disabled because broken
+            // eventClick={this.handleEventClick}
+           
             eventDurationEditable={false}
-            editable={true}
+            
+            //temp disabled because broken
+            // editable={true}
+
             selectable={true}
             timeZone={'utc'}
             allDayText={''}
@@ -82,8 +101,11 @@ export default class EditProgramme extends Component {
               hour12: false
             }}
             locale={'en-GB'}
-            eventDrop={this.handleEventDrag}
-            />
+           
+            //temp disabled because broken
+            // eventDrop={this.handleEventDrag}
+           
+           />
             <button onClick={this.saveProgramme}>Confirm Programme</button>
         </Container>
         )
@@ -92,12 +114,23 @@ export default class EditProgramme extends Component {
     createEvent =() => {
       //we set the enddate here because otherwise this.state.duration is not updated from the modal input value
       if(this.state.isNewEventModal){
+        
+        let endTime = this.state.duration.reduce(function(a, b){
+          return a + b;
+        }, 0)
+
+        // this.setState({calendarEvents: this.state.calendarEvents.concat({
+        //   title: this.state.url,
+        //   start: this.state.selectedDate,
+        //   end: moment.utc(this.state.selectedDate).add(this.state.duration, 'seconds').format("YYYY-MM-DD HH:mm:ss")
+        // })
+
         this.setState({calendarEvents: this.state.calendarEvents.concat({
           title: this.state.url,
           start: this.state.selectedDate,
-          end: moment.utc(this.state.selectedDate).add(this.state.duration, 'seconds').format("YYYY-MM-DD HH:mm:ss")
-
+          end: moment.utc(this.state.selectedDate).add(endTime, 'seconds').format("YYYY-MM-DD HH:mm:ss")
         })
+
       }, this.setState({isNewEventModal: false}))
     }else if(this.state.isSelectedEvent){
 
@@ -172,6 +205,8 @@ export default class EditProgramme extends Component {
     }
 
     handleDateClick = (arg) =>{
+      //wipe state to reset input fields and prevent dirty data
+      this.setState({inputs: initialState.inputs, url: initialState.url, duration: initialState.duration, videos:initialState.videos})
       this.setState({isNewEventModal: !this.state.isNewEventModal}, this.saveEvent(arg))
     
     }
@@ -184,6 +219,8 @@ export default class EditProgramme extends Component {
 
     saveProgramme(){
       console.log(this.state.calendarEvents)
+      console.log(this.state.duration)
+      this.setState({inputs: initialState.inputs, url: initialState.url, duration: initialState.duration, videos:initialState.videos})
     }
 
     getYoutubeVideoDuration(videoId, url){
@@ -259,7 +296,7 @@ export default class EditProgramme extends Component {
 
 handleChange(event, i) {
 
-    let url = [...this.state.url];
+    let url = {...this.state.url};
     var array = [...this.state.duration]
 
     // Contains an object mapping of the dynamic input field with the video link
@@ -304,18 +341,20 @@ handleChange(event, i) {
                        {this.state.inputs.map((input, i) => 
                        <div key={input}>
                          {/* https://itnext.io/building-a-dynamic-controlled-form-in-react-together-794a44ee552c */}
-                        <input id={`${input}-url`} onChange={this.handleChange} defaultValue={this.state.url}  placeholder="content url"></input>
-
+                         {this.state.url[i] ?                         
+                          <input id={`${input}-url`} onChange={this.handleChange} defaultValue={this.state.url}  placeholder="content url"></input>: 
+                          <input id={`${input}-url`} onChange={this.handleChange} placeholder="content url"></input>
+                        }
                         {this.state.duration[i] ?                         
                         <input id={`${input}-duration`} value={this.state.duration[i]} placeholder="duration" disabled></input> : 
                         <input id={`${input}-duration`} value={0} placeholder="duration" disabled></input>
-                      }
+                        }
                        </div> )}
               </div>
                   <button onClick={() => this.createEvent(this.state.duration)}>Confirm</button>
                 </Modal.Body>
                 <button onClick={ () => this.appendInput() }>
-                   CLICK ME TO ADD AN INPUT
+                   Add item to programme
                </button>
               </Modal>
        )
