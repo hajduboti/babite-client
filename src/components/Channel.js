@@ -29,6 +29,7 @@ class Channel extends Component {
       const programmeKeysOfDay = this.getTodaysKeys(Object.keys(channelData.programme))
       programmeInfo = this.getCurrentProgramme(channelData.programme, programmeKeysOfDay);
       currentVideoInfo = this.showMedia(channelData.programme[programmeInfo.key], programmeInfo.start)
+      if(currentVideoInfo.videoSource)
       currentVideo = currentVideoInfo.videoSource + "?t=" + currentVideoInfo.offset
       this.setState({
         videoNumber : currentVideoInfo.position,
@@ -56,7 +57,6 @@ class Channel extends Component {
     for(const element of programmeKeys) {
       const programmeStartingTime = moment(element).utc().unix()
       const programmeLength = this.getProgrammeLength(programmes[element])
-      console.log(now)
       if(now > programmeStartingTime){
         if(now > programmeStartingTime + programmeLength){
           continue;

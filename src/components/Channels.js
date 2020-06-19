@@ -29,7 +29,7 @@ class Channels extends Component {
 
     return (
       <Container className="py-4 px-3" fluid="channel-container ">
-        <Row className="px-10 justify-content-center align-items-stretch">
+        <Row className=" justify-content-center align-items-stretch">
           {channelItems}
         </Row>
       </Container>
