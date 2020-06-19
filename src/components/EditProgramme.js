@@ -52,7 +52,8 @@ export default class EditProgramme extends Component {
       duration: [],
       videos: [],
       //define with init value to render initial input field
-      inputs: ['input-0']
+      inputs: ['input-0'],
+      title: ''
 
     };    
 
@@ -115,20 +116,20 @@ export default class EditProgramme extends Component {
       //we set the enddate here because otherwise this.state.duration is not updated from the modal input value
       if(this.state.isNewEventModal){
         
+        // Summate all times entered in the fields to get the endtime of the programme
         let endTime = this.state.duration.reduce(function(a, b){
           return a + b;
         }, 0)
 
-        // this.setState({calendarEvents: this.state.calendarEvents.concat({
-        //   title: this.state.url,
-        //   start: this.state.selectedDate,
-        //   end: moment.utc(this.state.selectedDate).add(this.state.duration, 'seconds').format("YYYY-MM-DD HH:mm:ss")
-        // })
+        let mini_object = {[(Object.values(this.state.url))]: this.state.duration}
 
+        let programme_list = {[this.state.title]: mini_object}
+        
         this.setState({calendarEvents: this.state.calendarEvents.concat({
-          title: this.state.url,
+          title: this.state.title,
           start: this.state.selectedDate,
-          end: moment.utc(this.state.selectedDate).add(endTime, 'seconds').format("YYYY-MM-DD HH:mm:ss")
+          end: moment.utc(this.state.selectedDate).add(endTime, 'seconds').format("YYYY-MM-DD HH:mm:ss"),
+          extendedProps: programme_list
         })
 
       }, this.setState({isNewEventModal: false}))
@@ -219,7 +220,6 @@ export default class EditProgramme extends Component {
 
     saveProgramme(){
       console.log(this.state.calendarEvents)
-      console.log(this.state.duration)
       this.setState({inputs: initialState.inputs, url: initialState.url, duration: initialState.duration, videos:initialState.videos})
     }
 
@@ -295,14 +295,19 @@ export default class EditProgramme extends Component {
 }
 
 handleChange(event, i) {
-
     let url = {...this.state.url};
     var array = [...this.state.duration]
 
+    if(event.target.id == "title"){
+      this.setState({title: event.target.value})
+    }
+
+
     // Contains an object mapping of the dynamic input field with the video link
     // [input-0-url: "https://www.youtube.com/watch?v=3YFeE1eDlD0"]
-    url[event.target.id] = event.target.value
-
+    if(event.target.id != "title"){
+      url[event.target.id] = event.target.value
+    }
     // We get the value from the input field id from above (0, 1 ,2, etc.) and remove it from the array of durations if the url is removed
     let stringToGet = event.target.id.toString()
     var integer = parseInt(stringToGet.replace(/[^0-9\.]/g, ''), 10);
@@ -335,6 +340,7 @@ handleChange(event, i) {
                 <Modal.Title id="example-custom-modal-styling-title">
                   Create a new programme
                 </Modal.Title>
+                <input onChange={this.handleChange} placeholder="Programme Title" id='title'></input>
               </Modal.Header>
               <Modal.Body>
               <div id="dynamicInput">
