@@ -121,12 +121,12 @@ export default class EditProgramme extends Component {
         let endTime = this.state.duration.reduce(function(a, b){
           return a + b;
         }, 0)
+        
         let programme = []
         for(const url of Object.values(this.state.url)){
           const duration = this.state.duration.shift();
             programme.push({ url: url, duration: duration})
         }
-
 
         this.setState({calendarEvents: this.state.calendarEvents.concat({
           title: this.state.title,
