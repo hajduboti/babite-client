@@ -14,7 +14,7 @@ import axios from "axios"
 import YOUTUBE_API_KEY from "../youtube-exports"
 
 
-// Custom state object to reset state upon confirmation selection. No way to do this in React by default 
+// Custom state object to reset state upon confirmation selection. No way to do this in React by default
 const initialState = {
 
     url: {},
@@ -22,20 +22,20 @@ const initialState = {
     videos: [],
     //define with init value to render initial input field
     inputs: ['input-0']
-  
+
 }
 
 export default class EditProgramme extends Component {
   calendarRef = React.createRef()
-    constructor(props){  
-      super(props);  
+    constructor(props){
+      super(props);
       this.handleChange = this.handleChange.bind(this);
       this.handleDateChange = this.handleDateChange.bind(this);
       this.handleEventClick = this.handleEventClick.bind(this);
       this.handleEventDrag = this.handleEventDrag.bind(this);
       this.saveProgramme = this.saveProgramme.bind(this);
       this.getYoutubeVideoDuration = this.getYoutubeVideoDuration.bind(this)
-    } 
+    }
 
 
     state = {
@@ -49,13 +49,14 @@ export default class EditProgramme extends Component {
       isNewEventModal: false,
       isSelectedEvent: false,
       url: {},
+      currentProgramme: {},
       duration: [],
       videos: [],
       //define with init value to render initial input field
       inputs: ['input-0'],
       title: ''
 
-    };    
+    };
 
 
     render() {
@@ -72,15 +73,15 @@ export default class EditProgramme extends Component {
               right: "timeGridWeek, timeGridDay"
             }}
             defaultView={'timeGridWeek'}
-            plugins={[ timeGridPlugin, dayGridPlugin, interactionPlugin ]} 
+            plugins={[ timeGridPlugin, dayGridPlugin, interactionPlugin ]}
             events={this.state.calendarEvents}
             dateClick={this.handleDateClick}
-           
+
             //temp disabled because broken
             // eventClick={this.handleEventClick}
-           
+
             eventDurationEditable={false}
-            
+
             //temp disabled because broken
             // editable={true}
 
@@ -102,10 +103,10 @@ export default class EditProgramme extends Component {
               hour12: false
             }}
             locale={'en-GB'}
-           
+
             //temp disabled because broken
             // eventDrop={this.handleEventDrag}
-           
+
            />
             <button onClick={this.saveProgramme}>Confirm Programme</button>
         </Container>
@@ -115,21 +116,23 @@ export default class EditProgramme extends Component {
     createEvent =() => {
       //we set the enddate here because otherwise this.state.duration is not updated from the modal input value
       if(this.state.isNewEventModal){
-        
+
         // Summate all times entered in the fields to get the endtime of the programme
         let endTime = this.state.duration.reduce(function(a, b){
           return a + b;
         }, 0)
+        let programme = []
+        for(const url of Object.values(this.state.url)){
+          const duration = this.state.duration.shift();
+            programme.push({ url: url, duration: duration})
+        }
 
-        let mini_object = {[(Object.values(this.state.url))]: this.state.duration}
 
-        let programme_list = {[this.state.title]: mini_object}
-        
         this.setState({calendarEvents: this.state.calendarEvents.concat({
           title: this.state.title,
           start: this.state.selectedDate,
           end: moment.utc(this.state.selectedDate).add(endTime, 'seconds').format("YYYY-MM-DD HH:mm:ss"),
-          extendedProps: programme_list
+          extendedProps: programme
         })
 
       }, this.setState({isNewEventModal: false}))
@@ -149,7 +152,7 @@ export default class EditProgramme extends Component {
         start: this.state.selectedDate,
         end: this.state.endDate
       })
-    
+
     })
   }
   };
@@ -173,12 +176,12 @@ export default class EditProgramme extends Component {
       })
     })
     }
-  
 
-    handleEventClick = (calEvent) =>{    
+
+    handleEventClick = (calEvent) =>{
 
       let currentClickedEvent = calEvent.event
-      
+
       if(currentClickedEvent){
 
         // Initialise variables with start and end times of selected event
@@ -188,12 +191,12 @@ export default class EditProgramme extends Component {
         // Initialise variables with start and end times of selected event in date format
         let date = moment.utc(currentClickedEvent.start).format("YYYY-MM-DD HH:mm:ss")
         let durationDate = moment.utc(date).add(this.state.duration, 'seconds').format("YYYY-MM-DD HH:mm:ss");
-        
+
         //Calculate the difference between the selected event times, to display in the duration box
         let startEndTimeDifference = moment.duration(endTime.diff(startTime)).asSeconds();
 
         this.setState({
-          selectedDate:date, 
+          selectedDate:date,
           endDate:durationDate,
           url: currentClickedEvent.title,
           duration:startEndTimeDifference,
@@ -202,20 +205,20 @@ export default class EditProgramme extends Component {
 
       }
           this.setState({isSelectedEvent: !this.state.isSelectedEvent}, this.createEvent())
-      
+
     }
 
     handleDateClick = (arg) =>{
       //wipe state to reset input fields and prevent dirty data
       this.setState({inputs: initialState.inputs, url: initialState.url, duration: initialState.duration, videos:initialState.videos})
       this.setState({isNewEventModal: !this.state.isNewEventModal}, this.saveEvent(arg))
-    
+
     }
 
    saveEvent = (arg) => {
     let date = moment.utc(arg.dateStr).format("YYYY-MM-DD HH:mm:ss")
     this.setState({selectedDate:date}, this.createEvent())
-    
+
     }
 
     saveProgramme(){
@@ -248,15 +251,15 @@ export default class EditProgramme extends Component {
           return "url is invalid"
         }
         //callback to update object with new url and duration of video
-      }).then((response)=> 
+      }).then((response)=>
 
-      this.setState(prevState => ({ 
+      this.setState(prevState => ({
         duration: prevState.duration.concat([response])}), () =>
         videos[i] = {...videos[i], [url]: response},
         this.setState({ videos }),
     )
       )
-    
+
     }
 
 
@@ -278,7 +281,7 @@ export default class EditProgramme extends Component {
                 <input onChange={this.handleChange} value={this.state.duration} placeholder="duration" disabled id='time'></input>
                 {/* <button onClick={() => this.handleEventClick(true)}>Confirm</button> */}
                 <button onClick={this.handleEventClick}>Confirm</button>
-      
+
               </Modal.Body>
             </Modal>
      )
@@ -319,13 +322,13 @@ handleChange(event, i) {
     //update state of url objects and duration array
     this.setState({ url },
       this.setState({duration: array}));
-    
+
     //calculate duration of youtube video
     let videoUrlStringified = event.target.value
     const videoId = typeof videoUrlStringified==="string" ?videoUrlStringified.split('/watch?v=')[1]: ""
     if(videoId){
       this.getYoutubeVideoDuration(videoId, event.target.value)
-    }  
+    }
 }
   renderDateSelectModal = () => {
       return(
@@ -344,15 +347,15 @@ handleChange(event, i) {
               </Modal.Header>
               <Modal.Body>
               <div id="dynamicInput">
-                       {this.state.inputs.map((input, i) => 
+                       {this.state.inputs.map((input, i) =>
                        <div key={input}>
                          {/* https://itnext.io/building-a-dynamic-controlled-form-in-react-together-794a44ee552c */}
-                         {this.state.url[i] ?                         
-                          <input id={`${input}-url`} onChange={this.handleChange} defaultValue={this.state.url}  placeholder="content url"></input>: 
+                         {this.state.url[i] ?
+                          <input id={`${input}-url`} onChange={this.handleChange} defaultValue={this.state.url}  placeholder="content url"></input>:
                           <input id={`${input}-url`} onChange={this.handleChange} placeholder="content url"></input>
                         }
-                        {this.state.duration[i] ?                         
-                        <input id={`${input}-duration`} value={this.state.duration[i]} placeholder="duration" disabled></input> : 
+                        {this.state.duration[i] ?
+                        <input id={`${input}-duration`} value={this.state.duration[i]} placeholder="duration" disabled></input> :
                         <input id={`${input}-duration`} value={0} placeholder="duration" disabled></input>
                         }
                        </div> )}
