@@ -35,3 +35,7 @@
     background-color: transparent;
     border: 0;
 }
+
+.nav-dropdown-link a{
+    color: black !important;
+}

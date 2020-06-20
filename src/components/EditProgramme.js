@@ -12,6 +12,10 @@ import "../static/css/programme_main.css"
 import "../static/css/programme.css"
 import axios from "axios"
 import YOUTUBE_API_KEY from "../youtube-exports"
+import { editProgramme } from '../actions/channelActions';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
 
 
 // Custom state object to reset state upon confirmation selection. No way to do this in React by default
@@ -25,7 +29,7 @@ const initialState = {
 
 }
 
-export default class EditProgramme extends Component {
+class EditProgramme extends Component {
   calendarRef = React.createRef()
     constructor(props){
       super(props);
@@ -41,10 +45,8 @@ export default class EditProgramme extends Component {
     state = {
       calendarWeekends: true,
       calendarEvents: [],
-      // selectedDate: '',
       selectedDate: [],
       selectedEvent: '',
-      // endDate: '',
       endDate: {},
       isNewEventModal: false,
       isSelectedEvent: false,
@@ -224,6 +226,16 @@ export default class EditProgramme extends Component {
     saveProgramme(){
       console.log(this.state.calendarEvents)
       this.setState({inputs: initialState.inputs, url: initialState.url, duration: initialState.duration, videos:initialState.videos})
+
+      fetch(`https://in2agdk5ja.execute-api.eu-central-1.amazonaws.com/testing/channels/programme`, {
+        method: 'PUT',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: "{\"channel_name\":\"MTV\",\"map_key\":\"2020-06-21T12:00:00Z\",\"links\":[{\"url\":\"test1\",\"length\":\"1 time\"},{\"url\":\"test2\",\"length\":\"2 time\"},{\"url\":\"test3\",\"length\":\"4 time\"}]}"
+      })
+        .then(res => res.json())
+    
     }
 
     getYoutubeVideoDuration(videoId, url){
@@ -369,3 +381,7 @@ handleChange(event, i) {
        )
   }
 }
+const mapStateToProps = state => ({
+  channel: state.channels.currentChannel
+})
+export default connect(mapStateToProps, { editProgramme })(EditProgramme);
