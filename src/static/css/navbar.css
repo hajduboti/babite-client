@@ -14,10 +14,27 @@
 
 }
 
-.nav-logo{
-  width: 4em;
+.nav-link img{
+ max-width: none !important;
 }
 
-.dropdown-item{
+.profile-button{
+    max-width: none !important;
+}
 
+.nav-dropdown-link{
+    display: block;
+    width: 100%;
+    /* padding: .25rem 1.5rem; */
+    clear: both;
+    font-weight: 400;
+    color: #212529 !important;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+}
+
+.nav-dropdown-link a{
+    color: black !important;
 }

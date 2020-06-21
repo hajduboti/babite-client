@@ -1,4 +1,4 @@
-import { FETCH_CHANNELS, CREATE_CHANNEL, GET_CHANNEL } from './types';
+import { FETCH_CHANNELS, CREATE_CHANNEL, GET_CHANNEL, EDIT_PROGRAMME } from './types';
 
 export const fetchChannels = () => dispatch => {
   fetch('https://in2agdk5ja.execute-api.eu-central-1.amazonaws.com/testing/channels')
@@ -34,4 +34,19 @@ export const getChannelByName = (channelName) => dispatch => {
         type: GET_CHANNEL,
         payload: channelData.body
     }))
+}
+
+export const editProgramme = (data) => dispatch => {
+  fetch(`https://in2agdk5ja.execute-api.eu-central-1.amazonaws.com/testing/channels/programme`, {
+  method: 'PUT',
+  headers: {
+    'content-type': 'application/json'
+  },
+  body: JSON.stringify(data)
+})
+  .then(res => res.json())
+  .then(data => dispatch({
+    type: EDIT_PROGRAMME,
+      payload: data
+}))
 }

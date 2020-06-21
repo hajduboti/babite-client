@@ -52,10 +52,11 @@ class NavbarBabite extends Component {
     return (
       <Nav className="navbar navbar-expand-md background-color">
         {channels}
-        <Navbar.Brand>
-        <Nav.Link className="nav-link w-16" href="/"><img alt='babite-logo' src={BabiteLogo} className="nav-logo"></img></Nav.Link>
-        </Navbar.Brand>
-          <div className="navbar-collapse  collapse w-100 order-1 order-md-0 dual-collapse2">
+        {/* <Navbar.Brand> */}
+        {/* <img alt='babite-logo' src={BabiteLogo}></img> */}
+        <Nav.Link className="nav-link" href="/"><img alt='babite-logo' src={BabiteLogo}></img></Nav.Link>
+        {/* </Navbar.Brand> */}
+          <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
               <ul className="navbar-nav mr-auto">
               {/* If user is authenticated, display following button, else, nothing */}
               {isAuthenticated ?
