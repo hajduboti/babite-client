@@ -52,9 +52,10 @@ class NavbarBabite extends Component {
     return (
       <Nav className="navbar navbar-expand-md background-color">
         {channels}
-        <Navbar.Brand>
+        {/* <Navbar.Brand> */}
+        {/* <img alt='babite-logo' src={BabiteLogo}></img> */}
         <Nav.Link className="nav-link" href="/"><img alt='babite-logo' src={BabiteLogo}></img></Nav.Link>
-        </Navbar.Brand>
+        {/* </Navbar.Brand> */}
           <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
               <ul className="navbar-nav mr-auto">
               {/* If user is authenticated, display following button, else, nothing */}
@@ -87,9 +88,9 @@ class NavbarBabite extends Component {
                           <img className="profile-button" alt="profile-dropdown" src={Profile} />
                           </Dropdown.Toggle>
                           <Dropdown.Menu >
-                          <Dropdown.Item ><Link to={{pathname: `/${username}`}} className="card-title">{username}</Link></Dropdown.Item>
+                          <Dropdown.Item className="nav-dropdown-link"><Link to={{pathname: `/${username}`}} >{username}</Link></Dropdown.Item>
                           <Dropdown.Divider></Dropdown.Divider>
-                          <Dropdown.Item> <Link to={{pathname: `/${username}/programmes`}} className="card-title">Edit Programme</Link></Dropdown.Item>
+                          <Dropdown.Item className="nav-dropdown-link"> <Link to={{pathname: `/${username}/programmes`}}>Edit Programme</Link></Dropdown.Item>
                           <Dropdown.Item onClick={handleLogout}>LogOut</Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown>
