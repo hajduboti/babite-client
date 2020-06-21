@@ -38,3 +38,7 @@
 .nav-dropdown-link a{
     color: black !important;
 }
+
+.nav-logo{
+  width: 4em;
+}
