@@ -223,7 +223,9 @@ class EditProgramme extends Component {
         method: 'PUT',
         mode: 'cors',
         headers: {
-          'content-type': 'application/json'
+          // 'Access-Control-Allow-Headers': 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers',
+          'Access-Control-Allow-Origin':'http://localhost:3000',
+          // "Access-Control-Allow-Methods": "OPTIONS,PUT",
         },
         body: {
           'channel_name': 'MTV',
