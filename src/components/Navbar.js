@@ -69,28 +69,24 @@ class NavbarBabite extends Component {
                   </Nav.Item>
               </ul>
           </div>
-          <div className="mx-auto order-0">
-              <Form className="navbar-brand mx-auto">
-                <input className="form-control-override mr-sm-2" type="text" placeholder="Oi, I still exist and dont work" />
+          <div className="mx-auto order-0 w-4/6">
+              <Form className="navbar-brand mx-auto w-5/6	">
+                <input className="form-control-override mr-sm-2 w-2/3" type="text" placeholder="To be implemented..." />
               </Form>
-              <button className="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
-                  <span className="navbar-toggler-icon"></span>
-              </button>
           </div>
-          <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
-              <ul className="navbar-nav ml-auto">
+          <div className="navbar-collapse collapse w-100 order-3 dual-collapse2 flex justify-end">
                   <Nav.Item className="nav-item">
                       {isAuthenticated ?
                       <Row>
 
                         <Dropdown>
                           <Dropdown.Toggle className="profile-toggle">
-                          <img className="profile-button" alt="profile-dropdown" src={Profile} />
+                          <img className="profile-button nav-logo" alt="profile-dropdown" src={Profile} />
                           </Dropdown.Toggle>
                           <Dropdown.Menu >
-                          <Dropdown.Item className="nav-dropdown-link"><Link to={{pathname: `/${username}`}} >{username}</Link></Dropdown.Item>
+                          <Link to={{pathname: `/${username}`}} className="dropdown-item">{username}</Link>
                           <Dropdown.Divider></Dropdown.Divider>
-                          <Dropdown.Item className="nav-dropdown-link"> <Link to={{pathname: `/${username}/programmes`}}>Edit Programme</Link></Dropdown.Item>
+                          <Link to={{pathname: `/${username}/programmes`}} className="dropdown-item">Edit Programme</Link>
                           <Dropdown.Item onClick={handleLogout}>LogOut</Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown>
@@ -108,7 +104,6 @@ class NavbarBabite extends Component {
                       }
 
                   </Nav.Item>
-              </ul>
               {this.state.showLogIn ?
                 <Popup
                           isOpen={true}

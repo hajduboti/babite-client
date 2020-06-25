@@ -71,10 +71,7 @@ export default class Player extends Component {
               onEnded={this.handleEnded}
               style={{ pointerEvents: 'none' }}
               />
-            <button><img src="https://cdn.discordapp.com/attachments/393128959312789505/718423333867094076/danny-devito-face-png-4.png"  width="90" alt="so-anyways-i-started-blasting" onClick={this.handlePlayPause} /></button>
-
           </Col>
-
         </Row>
       </Container>
 

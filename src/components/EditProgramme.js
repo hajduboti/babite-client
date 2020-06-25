@@ -78,15 +78,7 @@ class EditProgramme extends Component {
             plugins={[ timeGridPlugin, dayGridPlugin, interactionPlugin ]}
             events={this.state.calendarEvents}
             dateClick={this.handleDateClick}
-
-            //temp disabled because broken
-            // eventClick={this.handleEventClick}
-
             eventDurationEditable={false}
-
-            //temp disabled because broken
-            // editable={true}
-
             selectable={true}
             timeZone={'utc'}
             allDayText={''}
@@ -106,9 +98,6 @@ class EditProgramme extends Component {
             }}
             locale={'en-GB'}
 
-            //temp disabled because broken
-            // eventDrop={this.handleEventDrag}
-
            />
             <button onClick={this.saveProgramme}>Confirm Programme</button>
         </Container>
@@ -123,7 +112,7 @@ class EditProgramme extends Component {
         let endTime = this.state.duration.reduce(function(a, b){
           return a + b;
         }, 0)
-        
+
         let programme = []
         for(const url of Object.values(this.state.url)){
           const duration = this.state.duration.shift();
@@ -218,24 +207,32 @@ class EditProgramme extends Component {
     }
 
    saveEvent = (arg) => {
-    let date = moment.utc(arg.dateStr).format("YYYY-MM-DD HH:mm:ss")
+    let date = moment.utc(arg.dateStr).format()
     this.setState({selectedDate:date}, this.createEvent())
 
     }
 
     saveProgramme(){
-      console.log(this.state.calendarEvents)
+      console.log(this.state.calendarEvents[0].extendedProps)
+
+      let startDate = this.state.calendarEvents[0].start;
+      console.log(startDate)
       this.setState({inputs: initialState.inputs, url: initialState.url, duration: initialState.duration, videos:initialState.videos})
 
       fetch(`https://in2agdk5ja.execute-api.eu-central-1.amazonaws.com/testing/channels/programme`, {
         method: 'PUT',
+        mode: 'cors',
         headers: {
           'content-type': 'application/json'
         },
-        body: "{\"channel_name\":\"MTV\",\"map_key\":\"2020-06-21T12:00:00Z\",\"links\":[{\"url\":\"test1\",\"length\":\"1 time\"},{\"url\":\"test2\",\"length\":\"2 time\"},{\"url\":\"test3\",\"length\":\"4 time\"}]}"
+        body: {
+          'channel_name': 'MTV',
+          'map_key': startDate,
+          'links': this.state.calendarEvents[0].extendedProps
+        }
       })
-        .then(res => res.json())
-    
+        .then(res => console.log(res.json()))
+
     }
 
     getYoutubeVideoDuration(videoId, url){

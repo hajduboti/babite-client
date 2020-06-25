@@ -1,6 +1,5 @@
 .profile-button{
     max-width: 2em;
-    max-height: 2em;
 }
 .profile-toggle{
     background-color: rgba(255, 255, 255, 0) !important;
@@ -38,4 +37,8 @@
 
 .nav-dropdown-link a{
     color: black !important;
+}
+
+.nav-logo{
+  width: 4em;
 }
